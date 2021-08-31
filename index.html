@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>GSI Tiles on Leaflet test</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  
+    <style>
+      body {padding: 0; margin: 0}
+      html, body, #map {height: 100%; width: 100%;}
+    </style>
+  </head>
+  
+  <body>
+    <div id="map"></div>
+    <script>
+      var map = L.map('map').setView([35.6602488,139.6831213],10);
+
+      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+      attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+      }).addTo(map);
+  
+      L.control.scale({ maxWidth:200, position:'bottomright', imperial:false }).addTo(map);
+
+      //地理院地図の標準地図タイル
+      var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+        {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+      //地理院地図の淡色地図タイル
+      var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+        {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+      //オープンストリートマップのタイル
+      var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+        {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+      //baseMapsオブジェクトのプロパティに3つのタイルを設定
+      var baseMaps = {
+        "地理院地図" : gsi,
+        "淡色地図" : gsipale,
+        "オープンストリートマップ"  : osm
+      };
+      //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+      //コントロール内にプロパティ名が表示される
+      L.control.layers(baseMaps).addTo(map);
+      gsi.addTo(map);
+    </script>
+  </body>
+</html>
