@@ -5,6 +5,7 @@
     <title>地域メッシュ検索</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   
     <style>
       body {padding: 0; margin: 0}
@@ -33,6 +34,13 @@
           {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
         var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
+        
+        $.getJSON("./data/hyoujun_mesh.geojson", function(data) {
+             var standardmesh = L.geoJson(data, {
+             onEachFeature: function (feature, layer) {
+             layer.bindPopup(feature.properties.name);
+            }
+        });  
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
           "地理院地図" : gsi,
@@ -44,7 +52,7 @@
         };
         //OverLayオブジェクトのプロパティを設定
         var OverLays = {
-            
+            "標準地域メッシュ" : standardmesh,
         };
         L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map);
