@@ -15,35 +15,39 @@
   <body>
     <div id="map"></div>
     <script>
-      var map = L.map('map').setView([35.6602488,139.6831213],10);
+        var map = L.map('map',{zoomControl:false}).setView([35.6602488,139.6831213],10);
 
-      L.control.scale({ maxWidth:200, position:'bottomright', imperial:false }).addTo(map);
+        L.control.scale({ maxWidth:250, position:'bottomright', imperial:false }).addTo(map);
+        L.control.zoom({position:'topright'}).addTo(map);
 
-      //地図タイル
-      var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
-        {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-      var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-        {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-      var gsiblank = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
-        {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-      var gisphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
-         {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-      var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
-        {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
-      var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
-        {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
-      //BaseMapsオブジェクトのプロパティにタイルを設定
-      var BaseMaps = {
-        "地理院地図" : gsi,
-        "地理院 淡色地図" : gsipale,
-        "地理院 白地図" : gsiblank,
-        "地理院 写真" : gisphoto,
-        "オープンストリートマップ"  : osm,
-        "MIERUNE 白地図" : mierunemono
-      };
-
-      L.control.layers(BaseMaps).addTo(map);
-      gsi.addTo(map);
+        //地図タイル
+        var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        var gsiblank = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
+          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        var gisphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+          {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+        var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
+          {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
+        //BaseMapsオブジェクトのプロパティにタイルを設定
+        var BaseMaps = {
+          "地理院地図" : gsi,
+          "地理院 淡色地図" : gsipale,
+          "地理院 白地図" : gsiblank,
+          "地理院 写真" : gisphoto,
+          "オープンストリートマップ" : osm,
+          "MIERUNE 白地図" : mierunemono
+        };
+        //OverLayオブジェクトのプロパティを設定
+        var OverLays = {
+            
+        };
+        L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
+        gsi.addTo(map);
     </script>
   </body>
 </html>
