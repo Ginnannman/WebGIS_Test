@@ -47,8 +47,8 @@
         //GeoJSONレイヤーをオーバーレイレイヤーに追加
       map.addLayer(geojsonLayer);
       };
-      function getJSON(jsonUrl) {
-        fetch(jsonUrl, {
+      function getJSON("./data/hyoujun_mesh.geojson") {
+        fetch("./data/hyoujun_mesh.geojson", {
           method:"GET"
         })
         .then(function(response) {
