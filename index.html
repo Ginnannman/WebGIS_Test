@@ -38,10 +38,10 @@
         
         var hyoujun_mesh = new L.geoJson();
         
-        $.getJSON("./data/hyoujun_mesh.geojson", function(json){
-          hyoujun_mesh.addData(json.data);
+        $.getJSON("./data/hyoujun_mesh.geojson", function(data){
+          hyoujun_mesh.L.geoJson(data);
         });
-
+        
         
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
