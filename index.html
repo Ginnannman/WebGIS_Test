@@ -38,7 +38,7 @@
         
         var hyoujun_mesh = new L.geoJson();
         
-        JQuery.getJSON("./data/hyoujun_mesh.geojson", function(data){
+        $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh.L.GeoJSON(data);
         });
 
