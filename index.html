@@ -38,12 +38,8 @@
         
         var hyoujun_mesh = new L.geoJson();
         
-        //$.getJSON("./data/hyoujun_mesh.geojson", function(json){
-        //  hyoujun_mesh.addData(json.data);
-        //});
-
-        $.getJSON("/data/hyoujun_mesh.geojson", function(data){
-          L.geoJSON(data).addTo(map);
+        $.getJSON("./data/hyoujun_mesh.geojson", function(json){
+          hyoujun_mesh.addData(json.data);
         });
 
         
