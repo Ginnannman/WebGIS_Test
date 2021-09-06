@@ -44,6 +44,7 @@
 
         $.getJSON("/data/hyoujun_mesh.geojson", function(data){
           L.geoJSON(data).addTo(map);
+        });
 
         
         //BaseMapsオブジェクトのプロパティにタイルを設定
