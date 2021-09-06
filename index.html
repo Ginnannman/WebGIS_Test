@@ -41,7 +41,7 @@
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh.L.geoJson(data);
         });
-        
+
         
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
@@ -56,7 +56,7 @@
         var OverLays = {
             "標準地域メッシュ" : hyoujun_mesh,
         };
-       // L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
+        L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map);
     </script>
   </body>
