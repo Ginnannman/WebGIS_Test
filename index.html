@@ -38,10 +38,20 @@
         
         var hyoujun_mesh = new L.geoJson();
         
+<<<<<<< HEAD
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh.L.geoJson(data);
+=======
+        //$.getJSON("./data/hyoujun_mesh.geojson", function(json){
+        //  hyoujun_mesh.addData(json.data);
+        //});
+
+        $.getJSON("/data/hyoujun_mesh.geojson", function(data){
+          L.geoJSON(data).addTo(map);
+>>>>>>> a7d628b8f0bb4355ee676741b171e0dd336df2da
         });
 
+        
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
           "地理院地図" : gsi,
@@ -55,7 +65,7 @@
         var OverLays = {
             "標準地域メッシュ" : hyoujun_mesh,
         };
-        L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
+       // L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map);
     </script>
   </body>
