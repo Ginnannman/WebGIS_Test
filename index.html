@@ -36,35 +36,12 @@
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
         
-        //var hyoujun_mesh = new L.geoJson();  
-        //$.getJSON("./data/hyoujun_mesh.geojson", function(data){
-        //  hyoujun_mesh = L.geoJSON(data.responseJSON);
-        //});
-      function addGeoJSONLayer(geojson){
-        var geojsonLayer = L.geoJSON(geojson,{
-          onEachFeature: function (feature, layer) {}
+        var hyoujun_mesh = new L.geoJson();  
+      　map.addLayer(hyoujun_mesh);
+        $.getJSON("./data/hyoujun_mesh.geojson", function(data){
+          hyoujun_mesh.addData(data);
         });
-        //GeoJSONレイヤーをオーバーレイレイヤーに追加
-      map.addLayer(geojsonLayer);
-      };
-      function getJSON("./data/hyoujun_mesh.geojson") {
-        fetch("./data/hyoujun_mesh.geojson", {
-          method:"GET"
-        })
-        .then(function(response) {
-             console.log("status=" + response.status); 
-             return response.json();
-        })
-        .then(function(data) {
-            addGeoJSONLayer(data);
-        })
-        .catch(function(err1) {
-            console.log("err=" + err1);
-        });
-      };
       
-
-        
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
           "地理院地図" : gsi,
