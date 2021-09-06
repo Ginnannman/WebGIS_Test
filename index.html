@@ -36,11 +36,33 @@
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
         
-        var hyoujun_mesh = new L.geoJson();
-        
-        $.getJSON("./data/hyoujun_mesh.geojson", function(data){
-          hyoujun_mesh = L.geoJSON(data.responseJSON);
+        //var hyoujun_mesh = new L.geoJson();  
+        //$.getJSON("./data/hyoujun_mesh.geojson", function(data){
+        //  hyoujun_mesh = L.geoJSON(data.responseJSON);
+        //});
+      function addGeoJSONLayer(geojson){
+        var geojsonLayer = L.geoJSON(geojson,{
+          onEachFeature: function (feature, layer) {}
         });
+        //GeoJSONレイヤーをオーバーレイレイヤーに追加
+      map.addLayer(geojsonLayer);
+      };
+      function getJSON(jsonUrl) {
+        fetch(jsonUrl, {
+          method:"GET"
+        })
+        .then(function(response) {
+             console.log("status=" + response.status); 
+             return response.json();
+        })
+        .then(function(data) {
+            addGeoJSONLayer(data);
+        })
+        .catch(function(err1) {
+            console.log("err=" + err1);
+        });
+      };
+      
 
         
         //BaseMapsオブジェクトのプロパティにタイルを設定
