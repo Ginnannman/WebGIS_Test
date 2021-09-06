@@ -36,12 +36,16 @@
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
         
-        var hyoujun_mesh = new L.geoJson();
+        //var hyoujun_mesh = new L.geoJson();
         
-        $.getJSON("./data/hyoujun_mesh.geojson", function(json){
-          hyoujun_mesh.addData(json.data);
-        });
+        //$.getJSON("./data/hyoujun_mesh.geojson", function(json){
+        //  hyoujun_mesh.addData(json.data);
+        //});
 
+        $.getJSON("/data/hyoujun_mesh.geojson", function(data){
+          L.geoJSON(data).addTo(map);
+
+        
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
           "地理院地図" : gsi,
