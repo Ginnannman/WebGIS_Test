@@ -46,10 +46,10 @@
               layer.bindPopup(feature.properties.Name);
             }
           });
-          map.addLayer(hyoujun_mesh);
+          //map.addLayer(hyoujun_mesh);
           //hyoujun_mesh.addData(data);
         });
-      
+        map.addLayer(hyoujun_mesh);
         //BaseMapsオブジェクトのプロパティにタイルを設定
         var BaseMaps = {
           "地理院地図" : gsi,
