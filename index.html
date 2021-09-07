@@ -38,7 +38,6 @@
         
         //var hyoujun_mesh = new L.geoJson();
         //map.addLayer(hyoujun_mesh);
-        hyoujun_mesh = new L.geoJson();
 
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh = L.geoJson(data,{
@@ -46,7 +45,7 @@
               layer.bindPopup(feature.properties.Name);
             }
           });
-          map.addLayer(hyoujun_mesh);
+          //map.addLayer(hyoujun_mesh);
           //hyoujun_mesh.addData(data);
         });
         //BaseMap
@@ -60,7 +59,7 @@
         };
         //OverLay
         var OverLays = {
-            "標準地域メッシュ" : hyoujun_mesh,
+            "標準地域2次メッシュ" : hyoujun_mesh,
         };
         L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
