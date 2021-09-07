@@ -40,7 +40,7 @@
            if (feature.properties && feature.properties.Name) {
             layer.bindPopup(feature.properties.Name);
         }};
-        var hyoujun_mesh = new L.geoJson(hoge,{
+        var hyoujun_mesh = new L.geoJson(geojson,{
           onEachFeature: onEachFeature
         });  
       　map.addLayer(hyoujun_mesh);
