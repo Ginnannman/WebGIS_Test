@@ -25,7 +25,7 @@
         //地図タイル
         var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-        var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+        var gsipale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
         var gsiblank = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
@@ -45,7 +45,7 @@
               layer.bindPopup(feature.properties.Name);
             }
           });
-          L.addOverlay(hyoujun_mesh,"標準地域2次メッシュ");
+          LayerControl.addOverlay(hyoujun_mesh,"標準地域2次メッシュ");
           //hyoujun_mesh.addData(data);
         });
         //BaseMap
@@ -61,7 +61,7 @@
         var OverLays = {
             
         };
-        L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
+        var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
     </script>
   </body>
