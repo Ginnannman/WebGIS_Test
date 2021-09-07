@@ -38,7 +38,7 @@
         
         //var hyoujun_mesh = new L.geoJson();
         //map.addLayer(hyoujun_mesh);
-        var hyoujun_mesh = [];
+        var hyoujun_mesh ;
 
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           var hyoujun_mesh = L.geoJson(data,{
