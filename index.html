@@ -40,9 +40,6 @@
         var hyoujun_mesh = new L.geoJson();  
       　map.addLayer(hyoujun_mesh);
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
-          onEachFeature: function (feature, layer){
-            layer.bindPopup(feature.properties.Name);
-          }
           hyoujun_mesh.addData(data);
         });
       
