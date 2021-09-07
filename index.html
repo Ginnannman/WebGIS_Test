@@ -40,13 +40,7 @@
         map.addLayer(hyoujun_mesh);
         
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
-          //function onEachFeature(feature, layer) {
-           //if (feature.properties && feature.properties.Name) {
-            //layer.bindPopup(feature.properties.Name);
-          //}};
-          //hyoujun_mesh.L.geoJson(hyoujun_mesh,{
-          //onEachFeature: onEachFeature
-          //});  
+          
           hyoujun_mesh.addData(data);
         });
       
