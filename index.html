@@ -44,7 +44,7 @@
            if (feature.properties && feature.properties.Name) {
             layer.bindPopup(feature.properties.Name);
           }};
-          var hyoujun_mesh = L.geoJson(hyoujun_mesh,{
+          hyoujun_mesh.L.geoJson(hyoujun_mesh,{
           onEachFeature: onEachFeature
           });  
           hyoujun_mesh.addData(data);
