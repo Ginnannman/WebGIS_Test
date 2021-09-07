@@ -36,18 +36,19 @@
         var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
-        function onEachFeature(feature, layer) {
-           if (feature.properties && feature.properties.Name) {
-            layer.bindPopup(feature.properties.Name);
-        }};
-        var hyoujun_mesh = new L.geoJson(geojson,{
-          onEachFeature: onEachFeature
-        });  
-      　map.addLayer(hyoujun_mesh);
+        var hyoujun_mesh = new L.geoJson();
 
         
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh.addData(data);
+          function onEachFeature(feature, layer) {
+           if (feature.properties && feature.properties.Name) {
+            layer.bindPopup(feature.properties.Name);
+          }};
+          var hyoujun_mesh = L.geoJson(hyoujun_mesh,{
+          onEachFeature: onEachFeature
+          });  
+      　  map.addLayer(hyoujun_mesh);
 
 
         });
