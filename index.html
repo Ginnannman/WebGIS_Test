@@ -7,6 +7,9 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://unpkg.com/geojson-vt@3.2.0/geojson-vt.js"></script>
+<!-- plugin-->
+    <link rel="stylesheet" href="css/L.Control.MapCenterCoord.css"/>
+    <script src="js/L.Control.MapCenterCoord.js"></script>
   
     <style>
       body {padding: 0; margin: 0}
@@ -69,6 +72,9 @@
         };
         var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
+        
+        //中心十字・座標
+        L.control.mapCenterCoord({position:'bottomleft'}).addTo(map);
     </script>
   </body>
 </html>
