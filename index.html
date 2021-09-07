@@ -45,7 +45,7 @@
               layer.bindPopup(feature.properties.Name);
             }
           });
-          map.addOverlay(hyoujun_mesh,"標準地域2次メッシュ");
+          L.addOverlay(hyoujun_mesh,"標準地域2次メッシュ");
           //hyoujun_mesh.addData(data);
         });
         //BaseMap
@@ -59,7 +59,7 @@
         };
         //OverLay
         var OverLays = {
-            "標準地域2次メッシュ" : hyoujun_mesh,
+            
         };
         L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
