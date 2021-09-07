@@ -46,11 +46,10 @@
               layer.bindPopup(feature.properties.Name);
             }
           });
-          //map.addLayer(hyoujun_mesh);
+          map.addLayer(hyoujun_mesh);
           //hyoujun_mesh.addData(data);
         });
-        map.addLayer(hyoujun_mesh);
-        //BaseMapsオブジェクトのプロパティにタイルを設定
+        //BaseMap
         var BaseMaps = {
           "地理院地図" : gsi,
           "地理院 淡色地図" : gsipale,
@@ -59,7 +58,7 @@
           "オープンストリートマップ" : osm,
           "MIERUNE 白地図" : mierunemono
         };
-        //OverLayオブジェクトのプロパティを設定
+        //OverLay
         var OverLays = {
             "標準地域メッシュ" : hyoujun_mesh,
         };
