@@ -36,17 +36,16 @@
         var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
-        //var hyoujun_mesh = new L.geoJson();
-        //map.addLayer(hyoujun_mesh);
+        
 
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
-          hyoujun_mesh = L.geoJson(data,{
+          hyoujun_mesh2 = L.geoJson(data,{
             onEachFeature: function(feature,layer){
-              layer.bindPopup(feature.properties.Name);
+              layer.bindPopup("メッシュ番号"+feature.properties.Name);
             }
           });
-          LayerControl.addOverlay(hyoujun_mesh,"標準地域2次メッシュ");
-          //hyoujun_mesh.addData(data);
+          LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
+          
         });
         //BaseMap
         var BaseMaps = {
