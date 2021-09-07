@@ -17,7 +17,6 @@
   <body>
     <div id="map"></div>
     <script>
-      $(function(){
         var map = L.map('map',{zoomControl:false}).setView([35.6602488,139.6831213],10);
 
         L.control.scale({ maxWidth:250, position:'bottomright', imperial:false }).addTo(map);
@@ -64,8 +63,7 @@
             "標準地域メッシュ" : hyoujun_mesh,
         };
         L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
-        gsi.addTo(map);
-      });   
+        gsi.addTo(map); 
     </script>
   </body>
 </html>
