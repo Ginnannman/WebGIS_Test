@@ -37,7 +37,7 @@
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
         
         var hyoujun_mesh = L.geoJson();
-
+        map.addLayer(hyoujun_mesh);
         
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh.addData(data);
@@ -48,7 +48,7 @@
           var hyoujun_mesh = L.geoJson(hyoujun_mesh,{
           onEachFeature: onEachFeature
           });  
-      　  map.addLayer(hyoujun_mesh);
+      　  
         });
       
         //BaseMapsオブジェクトのプロパティにタイルを設定
