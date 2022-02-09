@@ -75,6 +75,45 @@
         });
 
         //wikidata
+        var group = L.layerGroup();
+        LayerControl.addOverlay(group,"wikidata");
+        var lang ="ja";
+        if(location.search.match(/^\?([a-zA-Z_]+)&/)) lang = RegExp.$1;
+
+        map.on("moveend",function(){
+          var bounds = map.getBounds();
+          var sparql =
+          `SELECT ?place ?placeLabel ?location WHERE {
+            SERVICE wikibase:box {
+            ?place wdt:P625 ?location.
+            bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
+            bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
+            }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "${lang}". }
+          } limit 2000`;
+          group.cleanLayers();
+          fetch("https://query.wikidata.org/sparql?queery="+ encodeURIComponent(sparql),{
+            "headers": {
+              "accept": "application/sparql-result+json"
+            },
+            "method" : "GET",
+            "mode" : "cors"
+          }).then(a => a.json()).then(a=>{
+            a.result.bindings.forEach(x=>{
+              if(x.location.value.match(/^Point\((.+)(.+)\)$/)){
+                var lon = parseFloat(RegExp.$1);
+                var lat = parseFloat(RegExp.$2);
+                var html = "<span class ='wikidata'>"+x.placeLabel.value+"</span>";
+                if(x.placeLabel.value.match(/^Q[0-9]+$/))html = html.replace("wikidata","wikidata q");
+                L.marker([lat,lon],{
+                  icon:L.divIcon({
+                    html:html
+                  })
+                }).addTo(group);
+              }
+            })
+          })
+        }).fire("moveend");
 
         //BaseMap
         var BaseMaps = {
