@@ -76,7 +76,6 @@
 
         //wikidata
         var group = L.layerGroup();
-        LayerControl.addOverlay(group,"wikidata");
         var lang ="ja";
         if(location.search.match(/^\?([a-zA-Z_]+)&/)) lang = RegExp.$1;
 
@@ -114,6 +113,7 @@
             })
           })
         }).fire("moveend");
+        LayerControl.addOverlay(group,"wikidata");
 
         //BaseMap
         var BaseMaps = {
