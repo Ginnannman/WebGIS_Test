@@ -9,6 +9,7 @@
 <!-- plugin-->
     <link rel="stylesheet" href="css/L.Control.MapCenterCoord.css"/>
     <script src="js/L.Control.MapCenterCoord.js"></script>
+    <script src="js/leaflet-hash.js"></script>
   
     <style>
       body {padding: 0; margin: 0}
@@ -74,6 +75,9 @@
         
         //中心十字・座標
         L.control.mapCenterCoord({position:'bottomleft', onMove:true, latlngFormat:'DMS', latlngDesignators:true}).addTo(map);
+
+        //URLハッシュ
+        var hash = new L.Hash(map);
     </script>
   </body>
 </html>
