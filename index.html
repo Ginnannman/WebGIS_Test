@@ -14,6 +14,19 @@
     <style>
       body {padding: 0; margin: 0}
       html, body, #map {height: 100%; width: 100%;}
+
+      .wikidata {
+        white-space: nowrap;
+        width: auto;
+        height: auto;
+        background-color: aliceblue;
+        border: 1px solid black;
+      }
+
+      .wikidata.q {
+        background-color: black;
+        color:aliceblue;
+      }
     </style>
   </head>
   
@@ -34,13 +47,16 @@
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
         var gisphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-        var osm = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+        var osmjp = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
           {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
         var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
           {attribution:  'Map tiles by <a href="http://mierune.co.jp">MIERUNE</a>,under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors, under ODbL</a>'});
+        var stamen = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
+          {attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'})
         
         
 
+        //標準地域二次メッシュ
         $.getJSON("./data/hyoujun_mesh.geojson", function(data){
           hyoujun_mesh2 = L.geoJson(data,{
             onEachFeature: function(feature,layer){
@@ -57,14 +73,18 @@
           LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
           
         });
+
+        //wikidata
+
         //BaseMap
         var BaseMaps = {
           "地理院地図" : gsi,
           "地理院 淡色地図" : gsipale,
           "地理院 白地図" : gsiblank,
           "地理院 写真" : gisphoto,
-          "オープンストリートマップ" : osm,
-          "MIERUNE 白地図" : mierunemono
+          "オープンストリートマップ（日本）" : osmjp,
+          "MIERUNE 白地図" : mierunemono,
+          "Stamen Toner（白黒地図）" : stamen
         };
         //OverLay
         var OverLays = {
