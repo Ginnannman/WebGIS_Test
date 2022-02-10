@@ -97,7 +97,7 @@
                 var lon = parseFloat(RegExp.$1);
                 var lat = parseFloat(RegExp.$2);
                 var wikidataIcon = L.divIcon({
-                  html:'<div>x.placeLabel.value</div>',
+                  html:"<span>" + x.placeLabel.value + "</span>",
                   className: 'wikidata'
                 })
                 L.marker([lat, lon], {
