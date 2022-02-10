@@ -42,6 +42,8 @@
           {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
         var osmjp = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
           {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+        var opentopomap = L.tileLayer('https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
+          {attribution: "Kartendaten: ©<a href='https://openstreetmap.org/copyright' OpenStreetMap</a> -Mitwirkende, SRTM | Kartendarstellung: © <a href='http://opentopomap.org/'>OpenTopoMap</a> ( <a href='https://creativecommons.org/licenses/by-sa/3.0/'> CC-BY-SA</a>)"})
         var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
           {attribution:  "Map tiles by <a href='http://mierune.co.jp' target='_blank'>MIERUNE</a>,under <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a> &mdash; Mapdata: &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a>contributors, under ODbL</a>"});
         var stamen = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
@@ -79,11 +81,10 @@
                     `SELECT ?place ?placeLabel ?location WHERE {
             SERVICE wikibase:box {
             ?place wdt:P625 ?location.
-            ?place wdt:P4656 ?wikipedia.
             bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
             bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
             }
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en,zh". }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en,de,fr,nl,ru,es,it,arz,pl,vi,war,ceb,sv,ar,uk,pt,zh,ko,id". }
             } limit 2000`;
           group.clearLayers();
           fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql), {
@@ -97,14 +98,21 @@
               if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
                 var lon = parseFloat(RegExp.$1);
                 var lat = parseFloat(RegExp.$2);
+                var linkURL = x.place.value;
                 var wikidataIcon = L.divIcon({
-                  html:"<div class='wikidata'>" + x.placeLabel.value +"</div>",
+                  html:"<div class='wikidata'><a href="+linkURL+" target='_blank'>"+ x.placeLabel.value +"</a></div>",
                   className: 'div.wikidata',
-                  iconsize:[500,100]
+                  iconSize:[10,10],
+                  iconAnchor:[5,10]
                 })
-                L.marker([lat, lon], {
-                  icon: wikidataIcon
+                var marker = L.marker([lat, lon], {
+                  icon: wikidataIcon,
+                  riseOnHover: true,
                 }).addTo(group);
+                
+                //var popup = L.popup().setContent(linkText);  
+                //marker.bindPopup(popup).openpopup();
+                
               }
             });
           });
@@ -117,6 +125,7 @@
           "地理院 白地図" : gsiblank,
           "地理院 写真" : gisphoto,
           "オープンストリートマップ（日本）" : osmjp,
+          "オープントポマップ": opentopomap,
           "MIERUNE 白地図" : mierunemono,
           "Stamen Toner（白黒地図）" : stamen
         };

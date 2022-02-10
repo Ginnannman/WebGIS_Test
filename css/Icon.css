@@ -4,9 +4,23 @@ div.wikidata {
   width: auto;
   height: auto;
   white-space: nowrap;
-  background: aliceblue;
+  background: whitesmoke;
   border: 0.5px solid black;
   color: black;
   display: inline-block;
   text-align: center;
+}
+a:link{
+  color:blue;
+}
+a:visited{
+  color:navy;
+}
+a:hover{
+  color:red;
+  font-weight: bold;
+}
+a:active{
+  color:pink;
+  font-weight: bold;
 }
