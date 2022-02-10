@@ -87,7 +87,6 @@
         var group = L.layerGroup([],
           {attribution: "Powered by<a href= 'https://www.wikidata.org/' target='_blank'>Wikidata</a>"}
           );
-        var lang = "ja";
           if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
         map.on("moveend", function() {
@@ -99,7 +98,7 @@
             bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
             bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
             }
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "${lang}". }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],ja,en". }
             } limit 2000`;
           group.clearLayers();
           fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql), {
