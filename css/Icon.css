@@ -1,4 +1,8 @@
  span.wikidata {
+        writing-mode: horizontal-tb;
+        
+        box-sizing: content-box;
+        width: auto;
         white-space: nowrap;
         width: auto;
         height: auto;
