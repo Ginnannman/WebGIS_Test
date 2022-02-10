@@ -85,7 +85,7 @@
             bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
             }
             SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en,de,fr,nl,ru,es,it,arz,pl,vi,war,ceb,sv,ar,uk,pt,zh,ko,id". }
-            } limit 2000`;
+            } limit 1000`;
           group.clearLayers();
           fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql), {
             "headers": {
