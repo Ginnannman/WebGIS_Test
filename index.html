@@ -79,8 +79,10 @@
           
         });
 
-        //wikipedia
-        var group = L.layerGroup();
+        //wikidata
+        var group = L.layerGroup([],
+          attribution: "Powered by<a href= 'https://www.wikidata.org/'>Wikidata</a>"
+          );
         var lang = "ja";
           if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
@@ -117,7 +119,6 @@
               }
             });
           });
-          //LayerControl.addOverlay(group,"wikipedia");
         }).fire("moveend");
 
         //BaseMap
@@ -132,7 +133,7 @@
         };
         //OverLay
         var OverLays = {
-            "wikipedia": group,
+            "wikidata": group,
         };
         var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
