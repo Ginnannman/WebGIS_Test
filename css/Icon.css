@@ -1,13 +1,12 @@
- div.wikidata {
-        writing-mode: horizontal-tb;
-        font-size: medium;
-        width: auto;
-        height: auto;
-        white-space: nowrap;
-        background: aliceblue;
-        border: 0.5px solid black;
-        color: black;
-        /*display: inline-block;*/
-        /*flex:auto*/
-        text-align: center;
-      }
+div.wikidata {
+  writing-mode: horizontal-tb;
+  font-size: medium;
+  width: auto;
+  height: auto;
+  white-space: nowrap;
+  background: aliceblue;
+  border: 0.5px solid black;
+  color: black;
+  display: inline-block;
+  text-align: center;
+}
