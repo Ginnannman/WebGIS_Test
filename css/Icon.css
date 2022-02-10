@@ -5,7 +5,8 @@ div.wikidata {
   height: auto;
   white-space: nowrap;
   background: whitesmoke;
-  border: 0.5px solid black;
+  border: 0.3pt solid black;
+  border-radius: 1%;
   color: black;
   display: inline-block;
   text-align: center;
