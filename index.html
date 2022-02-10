@@ -84,7 +84,7 @@
         //wikipedia
         var group = L.layerGroup();
         var lang = "ja";
-        if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
+          if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
         map.on("moveend", function() {
           var bounds = map.getBounds();
@@ -119,6 +119,7 @@
               }
             });
           });
+          LayerControl.addOverlay(group,"wikipedia");
         }).fire("moveend");
 
         //BaseMap
