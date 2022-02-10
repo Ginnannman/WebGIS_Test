@@ -8,29 +8,13 @@
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <!-- plugin-->
     <link rel="stylesheet" href="css/L.Control.MapCenterCoord.css"/>
+    <link rel="stylesheet" href="css/Icon.css">
     <script src="js/L.Control.MapCenterCoord.js"></script>
     <script src="js/leaflet-hash.js"></script>
   
     <style>
       body {padding: 0; margin: 0}
       html, body, #map {height: 100%; width: 100%;}
-
-      .wikidata {
-        white-space: nowrap;
-        width: auto;
-        height: auto;
-        background-color: aliceblue;
-        border: 1px solid black;
-      }
-
-      .wikidata.q {
-        white-space: nowrap;
-        width: auto;
-        height: auto;
-        background-color: black;
-        border:1px solid aliceblue;
-        color:aliceblue;
-      }
     </style>
   </head>
   
@@ -112,10 +96,8 @@
               if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
                 var lon = parseFloat(RegExp.$1);
                 var lat = parseFloat(RegExp.$2);
-                var html = "<span class='wikidata'>" + x.placeLabel.value + "</span>";
-                  if (x.placeLabel.value.match(/^Q[0-9]+$/)) html = html.replace("wikidata", "wikidata q");
                 var wikidataIcon = L.divIcon({
-                  html:html,
+                  html:'x.placeLabel.value',
                   className:wikidata
                 })
                 L.marker([lat, lon], {
