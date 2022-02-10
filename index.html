@@ -81,7 +81,7 @@
 
         //wikidata
         var group = L.layerGroup([],
-          attribution: "Powered by<a href= 'https://www.wikidata.org/'>Wikidata</a>"
+          {attribution: "Powered by<a href= 'https://www.wikidata.org/'>Wikidata</a>"}
           );
         var lang = "ja";
           if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
