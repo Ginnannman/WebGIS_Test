@@ -82,46 +82,7 @@
         });
 
         //wikipedia
-        var template = '<h2>{label}</h2><p><img src="{thumbnail}" width="150"><br>{abstract}</p><p><a href="{link}" target="_blank">Wikipedia...</a></p>';
-
-        var wikipedia = L.layerGroup();
-
-        function getWikipadeaData() {
-          var newWiki = L.wikipedia({
-            query: {
-            fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail'],
-            bounds: map.getBounds()
-          },
-        marker: {
-        icon: L.icon({ // Icons from http://www.icondrawer.com/social-icons.php 
-          iconUrl: 'http://mappingforyou.eu/icons/wikipedia_16.png',
-          iconRetinaUrl: 'http://mappingforyou.eu/icons/wikipedia_32.png',
-          iconSize: [16, 16]
-            })
-          }
-        }).on('click', function (evt) {
-        evt.layer.bindPopup(L.Util.template(template, evt.layer.data), customOptions);
-        });
-        wikipedia.clearLayers();
-        wikipedia.addLayer(newWiki);
-        if (!map.hasLayer(wikipedia)) map.addLayer(wikipedia);
-        }
-      
-        var overLayers = [
-          {
-          name: "Wikipedia",
-          icon: '<img src="http://mappingforyou.eu/icons/wikipedia_16.png">',
-          layer: wikipedia
-          },
-        ];
-
-        var start_at_zoom_wiki = 10;
-        function onMoveEnd(evt) {
-          if (map.getZoom() > start_at_zoom_wiki) {
-            getWikipadeaData();
-          }
-        }
-         map.on('moveend', onMoveEnd);
+        
 
         //BaseMap
         var BaseMaps = {
