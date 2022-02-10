@@ -6,7 +6,7 @@ L.Wikipedia = L.FeatureGroup.extend({
 		query: {
 			fields: ['label', 'lat', 'lng', 'abstract', 'link', 'thumbnail', 'types'],
 			limit:  1000,
-			language: 'en'		
+			language: 'ja'		
 		},
 		params: {
 			format: 'json',
