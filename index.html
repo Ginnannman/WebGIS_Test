@@ -115,7 +115,8 @@
                 var html = "<span class='wikidata'>" + x.placeLabel.value + "</span>";
                   if (x.placeLabel.value.match(/^Q[0-9]+$/)) html = html.replace("wikidata", "wikidata q");
                 var wikidataIcon = L.divIcon({
-                  html:html
+                  html:html,
+                  className:wikidata
                 })
                 L.marker([lat, lon], {
                   icon: wikidataIcon
