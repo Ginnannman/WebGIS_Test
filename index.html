@@ -79,10 +79,11 @@
                     `SELECT ?place ?placeLabel ?location WHERE {
             SERVICE wikibase:box {
             ?place wdt:P625 ?location.
+            ?place wdt:P4656 ?wikipedia.
             bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
             bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
             }
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],ja,en". }
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en,zh". }
             } limit 2000`;
           group.clearLayers();
           fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql), {
@@ -97,9 +98,9 @@
                 var lon = parseFloat(RegExp.$1);
                 var lat = parseFloat(RegExp.$2);
                 var wikidataIcon = L.divIcon({
-                  html:"<span>" + x.placeLabel.value + "</span>",
-                  className: 'wikidata',
-                  iconsize:[50,5]
+                  html:"<div class='wikidata'>" + x.placeLabel.value +"</div>",
+                  className: 'div.wikidata',
+                  iconsize:[500,100]
                 })
                 L.marker([lat, lon], {
                   icon: wikidataIcon

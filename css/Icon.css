@@ -1,11 +1,12 @@
- span.wikidata {
+ div.wikidata {
         writing-mode: horizontal-tb;
-
-        box-sizing: content-box;
+        text-align: center;
+        font-size: medium;
         width: auto;
+        height: auto;
         white-space: nowrap;
-        width: max-content;
-        height: max-content;
-        background-color: aliceblue;
-        border: 1px solid black;
+        background: aliceblue;
+        border: 0.5px solid black;
+        color: black;
+        display: inline-block;
       }
