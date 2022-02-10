@@ -82,7 +82,7 @@
         });
 
         //wikipedia
-        var group = L.layerGroup().addTo(OverLays);
+        var group = L.layerGroup();
         var lang = "ja";
         if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
