@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="css/L.Control.MapCenterCoord.css"/>
     <script src="js/L.Control.MapCenterCoord.js"></script>
     <script src="js/leaflet-hash.js"></script>
-    <script src="js/leaflet-wikipedia-ja.js"></script>
-    <script src="js/leaflet-wikidata.js"></script>
   
     <style>
       body {padding: 0; margin: 0}
@@ -119,7 +117,7 @@
               }
             });
           });
-          LayerControl.addOverlay(group,"wikipedia");
+          //LayerControl.addOverlay(group,"wikipedia");
         }).fire("moveend");
 
         //BaseMap
@@ -134,7 +132,7 @@
         };
         //OverLay
         var OverLays = {
-            
+            "wikipedia": group,
         };
         var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
         gsi.addTo(map); 
