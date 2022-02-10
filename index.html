@@ -114,10 +114,11 @@
                 var lat = parseFloat(RegExp.$2);
                 var html = "<span class='wikidata'>" + x.placeLabel.value + "</span>";
                   if (x.placeLabel.value.match(/^Q[0-9]+$/)) html = html.replace("wikidata", "wikidata q");
+                var wikidataIcon = L.divIcon({
+                  html:html
+                })
                 L.marker([lat, lon], {
-                  icon: L.divIcon({
-                    html: html
-                  })
+                  icon: wikidataIcon
                 }).addTo(group);
               }
             });
