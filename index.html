@@ -100,7 +100,7 @@
                 var lat = parseFloat(RegExp.$2);
                 var linkURL = x.place.value;
                 var wikidataIcon = L.divIcon({
-                  html:"<div class='wikidata'><a href="+linkURL+" target='_blank'>"+ x.placeLabel.value +"</a></div>",
+                  html:"<div class='wikidata'><a href="+x.place.value+" target='_blank'>"+ x.placeLabel.value +"</a></div>",
                   className: 'div.wikidata',
                   iconSize:[10,10],
                   iconAnchor:[5,10]
