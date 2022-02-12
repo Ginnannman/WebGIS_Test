@@ -42,7 +42,7 @@ var map = L.map('map', L.extend({
         "fillOpacity": 0.2
       }
     });
-    //LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
+    LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
     
   });
 
@@ -105,7 +105,6 @@ var map = L.map('map', L.extend({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "標準地域2次メッシュ":hyoujun_mesh2,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
