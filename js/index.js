@@ -97,8 +97,7 @@ var map = L.map('map', L.extend({
         maxzoom:10,
         attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.',
         });
-                LayerControl.addOverlay(MSAIRD_l,"MS道路データ");
-    });
+    LayerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
 
   //BaseMap
