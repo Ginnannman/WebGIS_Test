@@ -42,7 +42,7 @@ var map = L.map('map', L.extend({
         "fillOpacity": 0.2
       }
     });
-    LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
+    layerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
     
   });
 
@@ -92,12 +92,14 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
-    var MSAIRD_l = protomaps.leafletLayer({
+var group2 = L.layerGroup([],
+    {attribution:"Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>."}
+    );    
+var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         maxzoom:10,
-        attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.',
-        });
-    LayerControl.addOverlay(MSAIRD_l,"MS道路データ");
+        }),addTo(group2);
+   // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
 
   //BaseMap
@@ -114,6 +116,7 @@ var map = L.map('map', L.extend({
   //OverLay
   var OverLays = {
       "wikidata": group,
+      "MS道路データ": group2,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
