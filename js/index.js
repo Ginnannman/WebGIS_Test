@@ -92,9 +92,9 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
-  const MSAIRD = new pmtiles.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.mvt")
+  const MSAIRD = new protomaps.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.mvt")
             MSAIRD.getHeader().then(h => {
-                let layer = pmtiles.leafletLayer(MSAIRD, {
+                let layer = protomaps.leafletLayer(MSAIRD, {
                     maxzoom:h.maxZoom,
                     attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.'
                 });
