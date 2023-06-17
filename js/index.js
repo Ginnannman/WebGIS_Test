@@ -92,7 +92,7 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
-  const MSAIRD = new protomaps.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.mvt")
+  const MSAIRD = new protomaps.PMTiles("https://tile.shayato.net/Road.pmtiles")
             MSAIRD.getHeader().then(h => {
                 let layer = protomaps.leafletLayer(MSAIRD, {
                     maxzoom:h.maxZoom,
