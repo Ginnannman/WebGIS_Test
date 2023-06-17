@@ -94,11 +94,11 @@ var map = L.map('map', L.extend({
   //MSAIRoadDetections
   const MSAIRD = new protomaps.PMTiles("https://tile.shayato.net/Road.pmtiles")
             MSAIRD.getHeader().then(h => {
-                let layer = protomaps.leafletLayer(MSAIRD, {
+                let MSAIRD_l = protomaps.leafletLayer(MSAIRD, {
                     maxzoom:h.maxZoom,
                     attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.'
                 });
-                layer.addTo(MSAIRD);
+                LayerControl.addOverlay(MSAIRD_l,"MS道路データ");;
             });
 
 
@@ -116,7 +116,6 @@ var map = L.map('map', L.extend({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "MS道路データ" : MSAIRD,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
