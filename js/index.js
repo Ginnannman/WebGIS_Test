@@ -98,7 +98,7 @@ var group2 = L.layerGroup([],
 var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         maxzoom:10,
-        }),addTo(group2);
+        }).addTo(group2);
    // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
 
