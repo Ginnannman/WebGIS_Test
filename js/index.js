@@ -92,7 +92,7 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
-  const MSAIRD = new pmtiles.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.pbf")
+  const MSAIRD = new pmtiles.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.mvt")
             MSAIRD.getHeader().then(h => {
                 let layer = pmtiles.leafletLayer(MSAIRD, {
                     maxzoom:h.maxZoom,
