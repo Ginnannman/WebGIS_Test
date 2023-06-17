@@ -90,6 +90,17 @@ var map = L.map('map', L.extend({
       });
     });
   }).fire("moveend");
+  
+  //MSAIRoadDetections
+  const MSAIRD = new pmtiles.PMTiles("https://tile.shayato.net/Road/{z}/{x}/{y}.pbf")
+            MSAIRD.getHeader().then(h => {
+                let layer = pmtiles.leafletLayer(MSAIRD, {
+                    maxzoom:h.maxZoom,
+                    attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.'
+                });
+                layer.addTo(map);
+            });
+
 
   //BaseMap
   var BaseMaps = {
@@ -105,6 +116,7 @@ var map = L.map('map', L.extend({
   //OverLay
   var OverLays = {
       "wikidata": group,
+      "MS道路データ" : MSAIRS,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
