@@ -116,7 +116,7 @@ var map = L.map('map', L.extend({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "MS道路データ" : MSAIRS,
+      "MS道路データ" : MSAIRD,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
