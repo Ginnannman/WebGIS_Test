@@ -92,13 +92,13 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
-    let MSAIRD_l = protomaps.leafletLayer( {
+    var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
-         maxzoom:10,
-        attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.'
-                });
+        maxzoom:10,
+        attribution:'Map tiles by Ginnannman, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. Data by <a href="https://github.com/microsoft/RoadDetections">Microsoft</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.',
+        });
                 LayerControl.addOverlay(MSAIRD_l,"MS道路データ");
-            });
+    });
 
 
   //BaseMap
