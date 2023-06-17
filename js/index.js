@@ -94,7 +94,8 @@ var map = L.map('map', L.extend({
   //MSAIRoadDetections
 var group2 = L.layerGroup([],
     {attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
-    );    
+    ); 
+group2.clearLayers();
 var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         maxzoom:10,
