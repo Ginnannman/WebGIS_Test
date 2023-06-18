@@ -113,7 +113,7 @@ class MyLineSymbolizer{
               for (var p = 0; p < ls.length; p++) {
                 let pt = ls[p];
                 if (p == 0) context.moveTo(pt.x, pt.y);
-                else ctx.lineTo(pt.x, pt.y);
+                else context.lineTo(pt.x, pt.y);
               }
               vertices_in_path += ls.length;
           }
