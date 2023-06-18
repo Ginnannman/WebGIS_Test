@@ -93,10 +93,10 @@ var map = L.map('map', L.extend({
   
   //MSAIRoadDetections
 class MyLineSymbolizer{
-    draw(context,geom,z,feature){
-        var colorInt= parseInt(feature.props.hougaku)*93206.75;
+    color(z,f) =>{
+        var colorInt= parseInt(f.props[hougaku])*93206.75;
         var color16= '0x' + colorInt.toString(16);
-        context.color();
+        return color16;
     }
 }
 let PAINT_RULES = [
