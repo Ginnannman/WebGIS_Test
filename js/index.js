@@ -163,6 +163,7 @@ var MSAIRD_2 = protomaps.leafletLayer({
   var OverLays = {
       "wikidata": group,
       "MS道路データ": group2,
+      "MS道路データ2": group3,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
