@@ -94,7 +94,7 @@ var map = L.map('map', L.extend({
   };
 group.on('add', function(){
     onLayerAdded();
-};
+});
   //MSAIRoadDetections
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
