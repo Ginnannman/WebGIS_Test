@@ -52,6 +52,7 @@ var map = L.map('map', L.extend({
     );
     if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
+  if (map.hasLayer(group)){
   map.on("moveend", function() {
     var bounds = map.getBounds();
     var sparql =
@@ -90,6 +91,7 @@ var map = L.map('map', L.extend({
       });
     });
   }).fire("moveend");
+  };
   
   //MSAIRoadDetections
 class MyLineSymbolizer{
