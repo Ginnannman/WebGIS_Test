@@ -95,6 +95,7 @@ var map = L.map('map', L.extend({
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
         var colorInt= parseInt(feature.props["hougaku"])*93206.75;
+        console.log(colorInt);
         var color16= '0x' + colorInt.toString(16);
         console.log(color16);
         context.fillStyle = color16;
