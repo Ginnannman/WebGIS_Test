@@ -93,7 +93,7 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   };
 group.on('add', function(){
-    onLayerAdded();
+    OnLayerAdded();
 });
   //MSAIRoadDetections
 class MyLineSymbolizer{
