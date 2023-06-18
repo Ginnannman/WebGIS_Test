@@ -97,6 +97,9 @@ class MyLineSymbolizer{
         var colorInt= parseInt(feature.props["hougaku"]*93206.75);
         var color16= '0x' + colorInt.toString(16);
         context.strokeStyle = color16;
+        context.fillStyle = colors16;
+        context.beginPath();
+        context.fill();
         context.stroke();
     }
 }
