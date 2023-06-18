@@ -131,6 +131,22 @@ var MSAIRD_l = protomaps.leafletLayer({
         }).addTo(group2);
    // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
+let PAINT_RULES2 = [
+    {
+        dataLayer:"MSAIRoadDetectionsJP",
+        symbolizer: new protomaps.LineSymbolizer({fill:"steelblue"});
+    }   
+];
+var group3 = L.layerGroup([],
+    {attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
+    ); 
+group3.clearLayers();
+var MSAIRD_2 = protomaps.leafletLayer({
+        url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
+        paint_rules:PAINT_RULES2,
+        maxzoom:10,
+        }).addTo(group3);
+
 
   //BaseMap
   var BaseMaps = {
