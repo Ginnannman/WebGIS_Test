@@ -95,7 +95,7 @@ var map = L.map('map', L.extend({
 let PAINT_RULES = [
     {
         dataLayer:"MSAIRoadDetectionsJP",
-        symbolizer: new protomaps.PolygonSymbolizer({fill;"steelblue"})
+        symbolizer: new protomaps.PolygonSymbolizer({fill"steelblue"})
     }   
 ];
 
