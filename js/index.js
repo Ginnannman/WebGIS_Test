@@ -42,7 +42,7 @@ var map = L.map('map', L.extend({
         "fillOpacity": 0.2
       }
     });
-    layerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
+    LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
     
   });
 
@@ -93,8 +93,8 @@ var map = L.map('map', L.extend({
   
   //MSAIRoadDetections
 class MyLineSymbolizer{
-    color(z,f){
-        var colorInt= parseInt(f.props.hougaku)*93206.75;
+    draw(context,geom,z,feature){
+        var colorInt= parseInt(feature.props["hougaku"])*93206.75;
         var color16= '0x' + colorInt.toString(16);
         return color16;
     }
