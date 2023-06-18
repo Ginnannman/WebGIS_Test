@@ -134,7 +134,7 @@ var MSAIRD_l = protomaps.leafletLayer({
 let PAINT_RULES2 = [
     {
         dataLayer:"MSAIRoadDetectionsJP",
-        symbolizer: new protomaps.LineSymbolizer({fill:"steelblue"});
+        symbolizer: new protomaps.LineSymbolizer({fill:"steelblue"}),
     }   
 ];
 var group3 = L.layerGroup([],
