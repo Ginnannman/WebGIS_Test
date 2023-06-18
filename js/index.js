@@ -128,7 +128,7 @@ let PAINT_RULES = [
 ];
 
 var group2 = L.layerGroup([],
-    {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
+    {maxzoom:10,MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
     ); 
 group2.clearLayers();
 var MSAIRD_l = protomaps.leafletLayer({
@@ -144,7 +144,7 @@ let PAINT_RULES2 = [
     }   
 ];
 var group3 = L.layerGroup([],
-    {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
+    {maxzoom:10,MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
     ); 
 group3.clearLayers();
 var MSAIRD_2 = protomaps.leafletLayer({
