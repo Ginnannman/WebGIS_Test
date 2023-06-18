@@ -102,15 +102,22 @@ class MyLineSymbolizer{
         var colorInt= parseInt(feature.props["hougaku"]*93206.75);
         var color16= '#' + colorInt.toString(16);
         context.strokeStyle = color16;
-        context.beginPath();
-        for (var poly of geom) {
-            for (var p = 0; p < poly.length-1; p++) {
-                let pt = poly[p];
-                if (p == 0) context.moveTo(pt.x,pt.y);
-                else context.lineTo(pt.x,pt.y);
-            }
-        }
-        context.stroke();
+        var vertices_in_path = 0;
+         context.beginPath();
+            for (var ls of geom) {
+             if (vertices_in_path + ls.length > 100000) {
+               strokePath();
+               vertices_in_path = 0;
+               context.beginPath();
+              }
+              for (var p = 0; p < ls.length; p++) {
+                let pt = ls[p];
+                if (p == 0) context.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+              }
+              vertices_in_path += ls.length;
+          }
+          if (vertices_in_path > 0) strokePath();
     }
 }
 let PAINT_RULES = [
