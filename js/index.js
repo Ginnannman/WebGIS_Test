@@ -92,10 +92,17 @@ var map = L.map('map', L.extend({
   }).fire("moveend");
   
   //MSAIRoadDetections
+class MyLineSymbolizer{
+    draw(context,geom,z,feature){
+        var colorInt= parseInt(feature.props.hougaku)*93206.75;
+        var color16= '0x' + colorInt.toString(16);
+        context.color();
+    }
+}
 let PAINT_RULES = [
     {
         dataLayer:"MSAIRoadDetectionsJP",
-        symbolizer: new protomaps.PolygonSymbolizer({fill:"steelblue"})
+        symbolizer: new MyLineSymbolizer()
     }   
 ];
 
@@ -106,7 +113,7 @@ group2.clearLayers();
 var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         paint_rules:PAINT_RULES,
-        maxzoom:10,
+        maxzoom:14,
         }).addTo(group2);
    // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
