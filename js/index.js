@@ -113,7 +113,7 @@ group2.clearLayers();
 var MSAIRD_l = protomaps.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         paint_rules:PAINT_RULES,
-        maxzoom:14,
+        maxzoom:10,
         }).addTo(group2);
    // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
 
