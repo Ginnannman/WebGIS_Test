@@ -15,7 +15,9 @@ var map = L.map('map', L.extend({
     {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
   var gsiblank = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
     {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var gisphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+  var gsiphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+  var gsiinei = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png',
     {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
   var osmjp = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
     {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
@@ -151,7 +153,8 @@ var MSAIRD_2 = protomaps.leafletLayer({
     "地理院地図" : gsi,
     "地理院 淡色地図" : gsipale,
     "地理院 白地図" : gsiblank,
-    "地理院 写真" : gisphoto,
+    "地理院 写真" : gsiphoto,
+    "地理院　陰影起伏図": gsiinei,
     "オープンストリートマップ（日本）" : osmjp,
     "オープントポマップ": opentopomap,
     "MIERUNE 白地図" : mierunemono,
