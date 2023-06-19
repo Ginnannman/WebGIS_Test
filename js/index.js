@@ -106,7 +106,7 @@ class MyLineSymbolizer{
          context.beginPath();
          context.strokeStyle = color16;
             for (var poly of geom) {
-            for (var p = 0; p < poly.length-1; p++) {
+            for (var p = 0; p < poly.length; p++) {
                 let pt = poly[p];
                 if (p == 0) context.moveTo(pt.x,pt.y);
                 else context.lineTo(pt.x,pt.y);
@@ -154,7 +154,7 @@ var MSAIRD_2 = protomaps.leafletLayer({
     "地理院 淡色地図" : gsipale,
     "地理院 白地図" : gsiblank,
     "地理院 写真" : gsiphoto,
-    "地理院　陰影起伏図": gsiinei,
+    "地理院 陰影起伏図": gsiinei,
     "オープンストリートマップ（日本）" : osmjp,
     "オープントポマップ": opentopomap,
     "MIERUNE 白地図" : mierunemono,
