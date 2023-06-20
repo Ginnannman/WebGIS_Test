@@ -99,7 +99,7 @@ group.on('add', function(){
 });
   //MSAIRoadDetections
 class ColorConverter {
-var color;
+var resultcolor;
   static getColorFromKakudo(kakudo) {
 
       if(kakudo >= 90){
@@ -110,9 +110,9 @@ var color;
       let saturation = 1;
       let value = 1;
       let rgb = this.hsvToRgb(hue, saturation, value);
-      color = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
+      resultcolor = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
     } 
-    return color;
+    return resultcolor;
   }
 
   static hsvToRgb(h, s, v) {
