@@ -101,7 +101,7 @@ group.on('add', function(){
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
         var kakudo = feature.props["hougaku"];
-        console.log(hougaku);
+        console.log(kakudo);
         if(0 <= kakudo < 3.75 || 90 <= kakudo < 93.75){
             var color = '#ff0000';
         }else if(3.75 <= kakudo < 11.25 || 93.75 <= kakudo < 101.25){
