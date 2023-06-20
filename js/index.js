@@ -144,7 +144,7 @@ class MyLineSymbolizer{
 }
 let PAINT_RULES = [
     {
-        dataLayer:"MSAIRoadDetectionsJP",
+        dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
         symbolizer: new MyLineSymbolizer()
     }   
 ];
@@ -161,7 +161,7 @@ var MSAIRD_l = protomaps.leafletLayer({
 
 let PAINT_RULES2 = [
     {
-        dataLayer:"MSAIRoadDetectionsJP",
+        dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
         symbolizer: new protomaps.LineSymbolizer({fill:"steelblue"}),
     }   
 ];
