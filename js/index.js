@@ -131,6 +131,7 @@ class MyLineSymbolizer{
         }else{
             var color = '#000000';
         };
+        console.log(color);
          context.beginPath();
          context.strokeStyle = color;
             for (var poly of geom) {
