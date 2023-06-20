@@ -99,7 +99,7 @@ group.on('add', function(){
 });
   //MSAIRoadDetections
 class ColorConverter {
-        let color;
+var color;
   static getColorFromKakudo(kakudo) {
 
       if(kakudo >= 90){
