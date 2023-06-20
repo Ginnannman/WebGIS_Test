@@ -99,8 +99,9 @@ group.on('add', function(){
 });
   //MSAIRoadDetections
 class ColorConverter {
+        let color;
   static getColorFromKakudo(kakudo) {
-    let color;
+
       if(kakudo >= 90){
           let hue = (kakudo-90)*4;
       }else{
