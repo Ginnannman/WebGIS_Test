@@ -100,11 +100,38 @@ group.on('add', function(){
   //MSAIRoadDetections
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
-        
-        var colorInt= parseInt(feature.props["hougaku"]*93206.75);
-        var color16= '#' + colorInt.toString(16);
+        var kakudo = feature.props["hougaku"];
+        if(0 <= kakudo < 3.75 || 90 <= kakudo < 93.75){
+            var color = '#ff0000';
+        }else if(3.75 <= kakudo < 11.25 || 93.75 <= kakudo < 101.25){
+            var color ='#ff7f00';
+        }else if(11.25 <= kakudo < 18.75 || 101.25 <= kakudo < 108.75){
+            var color ='#ffff00';
+        }else if(18.75 <= kakudo < 26.25 || 108.75 <= kakudo < 116.25){
+            var color ='#7fff00';
+        }else if(26.25 <= kakudo < 33.75 || 116.25 <= kakudo < 123.75){
+            var color ='#00ff00';
+        }else if(33.75 <= kakudo < 41.25 || 123.75 <= kakudo < 131.25){
+            var color ='#00ff7f';
+        }else if(41.25 <= kakudo < 48.75 || 131.25 <= kakudo < 138.75){
+            var color ='#00ffff';
+        }else if(48.75 <= kakudo < 56.25 || 138.75 <= kakudo < 146.25){
+            var color ='#0000ff';
+        }else if(56.25 <= kakudo < 63.75 || 146.25 <= kakudo < 153.75){
+            var color ='#7f00ff';
+        }else if(63.75 <= kakudo < 71.25 || 153.75 <= kakudo < 161.25){
+            var color ='#ff00ff';
+        }else if(71.25 <= kakudo < 78.75 || 161.25 <= kakudo < 168.75){
+            var color ='#ff007f';
+        }else if(78.75 <= kakudo < 86.25 || 168.75 <= kakudo < 176.25){
+            var color ='#ff7f00';
+        }else if(86.25 <= kakudo <= 90 || 176.25 <= kakudo <= 180){
+            var color ='#ff0000';
+        }else{
+            var color = '#000000';
+        };
          context.beginPath();
-         context.strokeStyle = color16;
+         context.strokeStyle = color;
             for (var poly of geom) {
             for (var p = 0; p < poly.length; p++) {
                 let pt = poly[p];
@@ -163,8 +190,8 @@ var MSAIRD_2 = protomaps.leafletLayer({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "MS道路データ": group2,
-      "MS道路データ2": group3,
+      "MS道路データ（黒）": group3,
+      "MS道路データ（カラー・試験中）": group2,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
