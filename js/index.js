@@ -100,59 +100,42 @@ group.on('add', function(){
   //MSAIRoadDetections
 class ColorConverter {
   static getColorFromKakudo(kakudo) {
-    let resultcolor;
-    
-    if (kakudo >= 90) {
-      let hue = (kakudo - 90) * 4;
-      let saturation = 1;
-      let value = 1;
-      let rgb = this.hsvToRgb(hue, saturation, value);
-      resultcolor = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
-    } else {
-      let hue = kakudo * 4;
-      let saturation = 1;
-      let value = 1;
-      let rgb = this.hsvToRgb(hue, saturation, value);
-      resultcolor = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
+    let resultColor = "#000000";
+    if ((kakudo >= 0 && kakudo < 3.75) || (kakudo >= 90 && kakudo < 93.75)) {
+      resultColor = "#ff0000";
+    } else if ((kakudo >= 3.75 && kakudo < 11.25) || (kakudo >= 93.75 && kakudo < 101.25)) {
+      resultColor = "#ff7f00";
+    } else if ((kakudo >= 11.25 && kakudo < 18.75) || (kakudo >= 101.25 && kakudo < 108.75)) {
+      resultColor = "#ffff00";
+    } else if ((kakudo >= 18.75 && kakudo < 26.25) || (kakudo >= 108.75 && kakudo < 116.25)) {
+      resultColor = "#7fff00";
+    } else if ((kakudo >= 26.25 && kakudo < 33.75) || (kakudo >= 116.25 && kakudo < 123.75)) {
+      resultColor = "#00ff00";
+    } else if ((kakudo >= 33.75 && kakudo < 41.25) || (kakudo >= 123.75 && kakudo < 131.25)) {
+      resultColor = "#00ff7f";
+    } else if ((kakudo >= 41.25 && kakudo < 48.75) || (kakudo >= 131.25 && kakudo < 138.75)) {
+      resultColor = "#00ffff";
+    } else if ((kakudo >= 48.75 && kakudo < 56.25) || (kakudo >= 138.75 && kakudo < 146.25)) {
+      resultColor = "#007fff";
+    } else if ((kakudo >= 56.25 && kakudo < 63.75) || (kakudo >= 146.25 && kakudo < 153.75)) {
+      resultColor = "#0000ff";
+    } else if ((kakudo >= 63.75 && kakudo < 71.25) || (kakudo >= 153.75 && kakudo < 161.25)) {
+      resultColor = "#7f00ff";
+    } else if ((kakudo >= 71.25 && kakudo < 78.75) || (kakudo >= 161.25 && kakudo < 168.75)) {
+      resultColor = "#ff00ff";
+    } else if ((kakudo >= 78.75 && kakudo < 86.25) || (kakudo >= 168.75 && kakudo < 176.25)) {
+      resultColor = "#ff007f";
+    } else if ((kakudo >= 86.25 && kakudo < 90) || (kakudo >= 176.25 && kakudo <= 180)) {
+      resultColor = "#ff0000";
     }
 
-    return resultcolor;
-  }
-
-  static hsvToRgb(h, s, v) {
-    let r, g, b;
-    let i = Math.floor(h * 6);
-    let f = h * 6 - i;
-    let p = v * (1 - s);
-    let q = v * (1 - f * s);
-    let t = v * (1 - (1 - f) * s);
-  
-    switch (i % 6) {
-      case 0: r = v, g = t, b = p; break;
-      case 1: r = q, g = v, b = p; break;
-      case 2: r = p, g = v, b = t; break;
-      case 3: r = p, g = q, b = v; break;
-      case 4: r = t, g = p, b = v; break;
-      case 5: r = v, g = p, b = q; break;
-    }
-  
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  }
-
-  static rgbToHex(r, g, b) {
-    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
-  }
-
-  static componentToHex(c) {
-    let hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+    return resultColor;
   }
 }
 
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
         var kakudo = feature.props["hougaku"];
-    
          context.beginPath();
          context.strokeStyle = ColorConverter.getColorFromKakudo(kakudo);
             for (var poly of geom) {
