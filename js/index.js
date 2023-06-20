@@ -99,50 +99,56 @@ group.on('add', function(){
 });
   //MSAIRoadDetections
 class ColorConverter {
-var resultcolor;
   static getColorFromKakudo(kakudo) {
-
-      if(kakudo >= 90){
-          let hue = (kakudo-90)*4;
-      }else{
-      let hue = kakudo*4;
-      }
+    let resultcolor;
+    
+    if (kakudo >= 90) {
+      let hue = (kakudo - 90) * 4;
       let saturation = 1;
       let value = 1;
       let rgb = this.hsvToRgb(hue, saturation, value);
       resultcolor = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
-    } 
+    } else {
+      let hue = kakudo * 4;
+      let saturation = 1;
+      let value = 1;
+      let rgb = this.hsvToRgb(hue, saturation, value);
+      resultcolor = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
+    }
+
     return resultcolor;
   }
 
   static hsvToRgb(h, s, v) {
     let r, g, b;
-  let i = Math.floor(h * 6);
-  let f = h * 6 - i;
-  let p = v * (1 - s);
-  let q = v * (1 - f * s);
-  let t = v * (1 - (1 - f) * s);
+    let i = Math.floor(h * 6);
+    let f = h * 6 - i;
+    let p = v * (1 - s);
+    let q = v * (1 - f * s);
+    let t = v * (1 - (1 - f) * s);
   
-  switch (i % 6) {
-    case 0: r = v, g = t, b = p; break;
-    case 1: r = q, g = v, b = p; break;
-    case 2: r = p, g = v, b = t; break;
-    case 3: r = p, g = q, b = v; break;
-    case 4: r = t, g = p, b = v; break;
-    case 5: r = v, g = p, b = q; break;
+    switch (i % 6) {
+      case 0: r = v, g = t, b = p; break;
+      case 1: r = q, g = v, b = p; break;
+      case 2: r = p, g = v, b = t; break;
+      case 3: r = p, g = q, b = v; break;
+      case 4: r = t, g = p, b = v; break;
+      case 5: r = v, g = p, b = q; break;
+    }
+  
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   }
-        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-}
 
   static rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
 
   static componentToHex(c) {
     let hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+    return hex.length == 1 ? "0" + hex : hex;
   }
 }
+
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
         var kakudo = feature.props["hougaku"];
