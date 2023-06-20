@@ -98,42 +98,59 @@ group.on('add', function(){
     OnLayerAdded();
 });
   //MSAIRoadDetections
+class ColorConverter {
+  static getColorFromKakudo(kakudo) {
+    let color;
+      if(kakudo >= 90){
+          let hue = (kakudo-90)*4;
+      }else{
+      let hue = kakudo*4;
+      }
+      let saturation = 1;
+      let value = 1;
+      let rgb = this.hsvToRgb(hue, saturation, value);
+      color = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
+    } else {
+      color = '#000000';
+    }
+
+    return color;
+  }
+
+  static hsvToRgb(h, s, v) {
+    let r, g, b;
+  let i = Math.floor(h * 6);
+  let f = h * 6 - i;
+  let p = v * (1 - s);
+  let q = v * (1 - f * s);
+  let t = v * (1 - (1 - f) * s);
+  
+  switch (i % 6) {
+    case 0: r = v, g = t, b = p; break;
+    case 1: r = q, g = v, b = p; break;
+    case 2: r = p, g = v, b = t; break;
+    case 3: r = p, g = q, b = v; break;
+    case 4: r = t, g = p, b = v; break;
+    case 5: r = v, g = p, b = q; break;
+  }
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+  static rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+
+  static componentToHex(c) {
+    let hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+  }
+}
 class MyLineSymbolizer{
     draw(context,geom,z,feature){
         var kakudo = feature.props["hougaku"];
-        console.log(kakudo);
-        if(0 <= kakudo < 3.75 || 90 <= kakudo < 93.75){
-            var color = '#ff0000';
-        }else if(3.75 <= kakudo < 11.25 || 93.75 <= kakudo < 101.25){
-            var color ='#ff7f00';
-        }else if(11.25 <= kakudo < 18.75 || 101.25 <= kakudo < 108.75){
-            var color ='#ffff00';
-        }else if(18.75 <= kakudo < 26.25 || 108.75 <= kakudo < 116.25){
-            var color ='#7fff00';
-        }else if(26.25 <= kakudo < 33.75 || 116.25 <= kakudo < 123.75){
-            var color ='#00ff00';
-        }else if(33.75 <= kakudo < 41.25 || 123.75 <= kakudo < 131.25){
-            var color ='#00ff7f';
-        }else if(41.25 <= kakudo < 48.75 || 131.25 <= kakudo < 138.75){
-            var color ='#00ffff';
-        }else if(48.75 <= kakudo < 56.25 || 138.75 <= kakudo < 146.25){
-            var color ='#0000ff';
-        }else if(56.25 <= kakudo < 63.75 || 146.25 <= kakudo < 153.75){
-            var color ='#7f00ff';
-        }else if(63.75 <= kakudo < 71.25 || 153.75 <= kakudo < 161.25){
-            var color ='#ff00ff';
-        }else if(71.25 <= kakudo < 78.75 || 161.25 <= kakudo < 168.75){
-            var color ='#ff007f';
-        }else if(78.75 <= kakudo < 86.25 || 168.75 <= kakudo < 176.25){
-            var color ='#ff7f00';
-        }else if(86.25 <= kakudo <= 90 || 176.25 <= kakudo <= 180){
-            var color ='#ff0000';
-        }else{
-            var color = '#000000';
-        };
-        console.log(color);
+    
          context.beginPath();
-         context.strokeStyle = color;
+         context.strokeStyle = ColorConverter.getColorFromKakudo(kakudo);
             for (var poly of geom) {
             for (var p = 0; p < poly.length; p++) {
                 let pt = poly[p];
