@@ -110,10 +110,7 @@ class ColorConverter {
       let value = 1;
       let rgb = this.hsvToRgb(hue, saturation, value);
       color = this.rgbToHex(rgb[0], rgb[1], rgb[2]);
-    } else {
-      color = '#000000';
-    }
-
+    } 
     return color;
   }
 
