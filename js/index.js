@@ -27,7 +27,7 @@ var map = L.map('map', L.extend({
     {attribution:  "Map tiles by <a href='http://mierune.co.jp' target='_blank'>MIERUNE</a>,under <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a> &mdash; Mapdata: &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a>contributors, under ODbL</a>"});
   var stamen = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
     {attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, under <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a>. Data by <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a>, under <a href='http://www.openstreetmap.org/copyright' target='_blank'>ODbL</a>."})
-  
+  var blankbase = L.tileLayer('');
   
 
   //標準地域二次メッシュ
@@ -191,7 +191,8 @@ var MSAIRD_2 = protomaps.leafletLayer({
     "オープンストリートマップ（日本）" : osmjp,
     "オープントポマップ": opentopomap,
     "MIERUNE 白地図" : mierunemono,
-    "Stamen Toner（白黒地図）" : stamen
+    "Stamen Toner（白黒地図）" : stamen,
+    "ベースマップなし" : blankbase  
   };
   //OverLay
   var OverLays = {
