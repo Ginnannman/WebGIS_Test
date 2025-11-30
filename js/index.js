@@ -159,7 +159,7 @@ var group2 = L.layerGroup([],
     {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
     ); 
 group2.clearLayers();
-var MSAIRD_l = protomaps.leafletLayer({
+var MSAIRD_l = protomapsL.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         paint_rules:PAINT_RULES,
         }).addTo(group2);
@@ -168,14 +168,14 @@ var MSAIRD_l = protomaps.leafletLayer({
 let PAINT_RULES2 = [
     {
         dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
-        symbolizer: new protomaps.LineSymbolizer({fill:"steelblue"}),
+        symbolizer: new protomapsL.LineSymbolizer({fill:"steelblue"}),
     }   
 ];
 var group3 = L.layerGroup([],
     {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
     ); 
 group3.clearLayers();
-var MSAIRD_2 = protomaps.leafletLayer({
+var MSAIRD_2 = protomapsL.leafletLayer({
         url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
         paint_rules:PAINT_RULES2,
         }).addTo(group3);
