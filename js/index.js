@@ -319,7 +319,7 @@ const PAINT_RULES_BLACK = [
         symbolizer: new protomapsL.LineSymbolizer({fill:"steelblue"}),
     }   
 ];
-const PMTILES_URL = 'https://tile.shayato.net/Road.pmtiles';
+const PMTILES_URL = 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt';
 
 const groupColor = L.layerGroup([], {
   MaxNativeZoom: 10,
