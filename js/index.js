@@ -165,6 +165,12 @@ filterInput.addEventListener("blur", () => {
   setTimeout(() => (suggestList.style.display = "none"), 200);
 });
 
+    function buildFilterClause() {
+  if (!wikidataFilterQID) return "";
+  return `
+    ?place (wdt:P31/wdt:P279*) wd:${wikidataFilterQID}.
+  `;
+}
   // ==== Wikidata取得処理 ====
   const fetchWikidata = debounce(function () {
     const bounds = map.getBounds();
