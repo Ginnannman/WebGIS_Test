@@ -360,6 +360,21 @@ var MSAIRD_2 = protomapsL.leafletLayer({
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
+const wikidataSearchBox = document.getElementById("wikidataSearchBox");
+
+// wikidataレイヤー追加時
+map.on("overlayadd", function (e) {
+  if (e.name === "wikidata") {
+    wikidataSearchBox.style.display = "block"; // 表示
+  }
+});
+
+// レイヤー削除時
+map.on("overlayremove", function (e) {
+  if (e.name === "wikidata") {
+    wikidataSearchBox.style.display = "none";  // 非表示
+  }
+});
   
   //中心十字・座標
   L.control.mapCenterCoord({position:'bottomleft', onMove:true, latlngFormat:'DMS', latlngDesignators:true}).addTo(map);
