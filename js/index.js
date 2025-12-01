@@ -306,38 +306,40 @@ class MyLineSymbolizer{
          context.stroke();
     }
 }
-let PAINT_RULES = [
+const PAINT_RULES_COLOR = [
     {
         dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
         symbolizer: new MyLineSymbolizer()
     }   
 ];
 
-var group2 = L.layerGroup([],
-    {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
-    ); 
-group2.clearLayers();
-var MSAIRD_l = protomapsL.leafletLayer({
-        url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
-        paint_rules:PAINT_RULES,
-        }).addTo(group2);
-   // layerControl.addOverlay(MSAIRD_l,"MS道路データ");
-
-let PAINT_RULES2 = [
+const PAINT_RULES_BLACK = [
     {
         dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
         symbolizer: new protomapsL.LineSymbolizer({fill:"steelblue"}),
     }   
 ];
-var group3 = L.layerGroup([],
-    {MaxNativeZoom:10,attribution:"Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>."}
-    ); 
-group3.clearLayers();
-var MSAIRD_2 = protomapsL.leafletLayer({
-        url: 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt',
-        paint_rules:PAINT_RULES2,
-        }).addTo(group3);
+const PMTILES_URL = 'https://tile.shayato.net/Road.pmtiles';
 
+const groupColor = L.layerGroup([], {
+  MaxNativeZoom: 10,
+  attribution: "Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>."
+});
+
+const groupBlack = L.layerGroup([], {
+  MaxNativeZoom: 10,
+  attribution: groupColor.options.attribution
+});
+
+const MSAIRD_Color = protomapsL.leafletLayer({
+  url: PMTILES_URL,
+  paint_rules: PAINT_RULES_COLOR
+}).addTo(groupColor);
+
+const MSAIRD_Black = protomapsL.leafletLayer({
+  url: PMTILES_URL,
+  paint_rules: PAINT_RULES_BLACK
+}).addTo(groupBlack);
 
   //BaseMap
   var BaseMaps = {
@@ -355,8 +357,8 @@ var MSAIRD_2 = protomapsL.leafletLayer({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "MS道路データ（黒）": group3,
-      "MS道路データ（カラー・試験中）": group2,
+      "MS道路データ（黒）": groupBlack,
+      "MS道路データ（カラー・試験中）": groupColor,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
