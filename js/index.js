@@ -49,55 +49,94 @@ var map = L.map('map', L.extend({
   });
 
   //wikidata
-  var group = L.layerGroup([],
-    {attribution: "Powered by<a href= 'https://www.wikidata.org/' target='_blank'>Wikidata</a>"}
-    );
-    if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
+var group = L.layerGroup([],
+  { attribution: "Powered by <a href='https://www.wikidata.org/' target='_blank'>Wikidata</a>" }
+);
 
-  function OnLayerAdded() {
-  map.on("moveend", function() {
+if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
+
+function OnLayerAdded() {
+
+  // ---- debounce 関数 ----
+  function debounce(func, wait) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // ==== Wikidata ロード処理（デバウンス付き） ====
+  const fetchWikidata = debounce(function () {
     var bounds = map.getBounds();
-    var sparql =
-              `SELECT ?place ?placeLabel ?location WHERE {
-      SERVICE wikibase:box {
-      ?place wdt:P625 ?location.
-      bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
-      bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
-      }
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en,de,fr,nl,ru,es,it,arz,pl,vi,war,ceb,sv,ar,uk,pt,zh,ko,id". }
-      } limit 1000`;
-    group.clearLayers();
-    fetch("https://query.wikidata.org/sparql?query=" + encodeURIComponent(sparql), {
-      "headers": {
-        "accept": "application/sparql-results+json"
-      },
-      "method": "GET",
-      "mode": "cors"
-    }).then(a => a.json()).then(a => {
-      a.results.bindings.forEach(x => {
-        if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
-          var lon = parseFloat(RegExp.$1);
-          var lat = parseFloat(RegExp.$2);
-          var linkURL = x.place.value;
-          var wikidataIcon = L.divIcon({
-            html:"<div class='wikidata'><a href="+x.place.value+" target='_blank'>"+ x.placeLabel.value +"</a></div>",
-            className: 'div.wikidata',
-            iconSize:[10,10],
-            iconAnchor:[5,10]
-          })
-          var marker = L.marker([lat, lon], {
-            icon: wikidataIcon,
-            riseOnHover: true,
-          }).addTo(group); 
+
+    var sparql = `
+      SELECT ?place ?placeLabel ?location WHERE {
+        SERVICE wikibase:box {
+          ?place wdt:P625 ?location.
+          bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
+          bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
         }
+        SERVICE wikibase:label { 
+          bd:serviceParam wikibase:language "ja,en,de,fr,nl,ru,es,it,arz,pl,vi,war,ceb,sv,ar,uk,pt,zh,ko,id".
+        }
+      }
+      LIMIT 1000
+    `;
+
+    // markers リセット
+    group.clearLayers();
+
+    fetch("https://query.wikidata.org/sparql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/sparql-query",
+        "Accept": "application/sparql-results+json"
+      },
+      body: sparql
+    })
+      .then(res => res.json())
+      .then(data => {
+        data.results.bindings.forEach(x => {
+          if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
+            var lon = parseFloat(RegExp.$1);
+            var lat = parseFloat(RegExp.$2);
+
+            var wikidataIcon = L.divIcon({
+              html: "<div class='wikidata'><a href='" + x.place.value + "' target='_blank'>" + x.placeLabel.value + "</a></div>",
+              className: 'wikidata',
+              iconSize: [10, 10],
+              iconAnchor: [5, 10]
+            });
+
+            L.marker([lat, lon], {
+              icon: wikidataIcon,
+              riseOnHover: true,
+            }).addTo(group);
+          }
+        });
+      })
+      .catch(err => {
+        console.error("Wikidata SPARQL Error:", err);
       });
-    });
-  }).fire("moveend");
-  };
-group.on('add', function(){
-    OnLayerAdded();
+
+  }, 300); // ← ここでデバウンス時間設定（300ms）
+
+
+  // viewport 移動後にデータ読み込み
+  map.on("moveend", fetchWikidata);
+
+  // 初回ロード時も実行
+  fetchWikidata();
+}
+
+
+// Wikidata レイヤー追加時に実行
+group.on('add', function () {
+  OnLayerAdded();
 });
-  //MSAIRoadDetections
+
+//MSAIRoadDetections
 class ColorConverter {
   static getColorFromKakudo(kakudo) {
     let resultColor = "#000000";
