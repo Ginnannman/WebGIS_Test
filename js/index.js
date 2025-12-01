@@ -357,8 +357,8 @@ const MSAIRD_Black = protomapsL.leafletLayer({
   //OverLay
   var OverLays = {
       "wikidata": group,
-      "MS道路データ（黒）": groupBlack,
-      "MS道路データ（カラー・試験中）": groupColor,
+      // "MS道路データ（黒）": groupBlack,
+      // "MS道路データ（カラー・試験中）": groupColor,
   };
   var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
   gsi.addTo(map); 
