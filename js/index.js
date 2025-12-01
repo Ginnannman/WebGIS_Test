@@ -82,6 +82,10 @@ var group = L.layerGroup([],
 if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
 function OnLayerAdded() {
+let wikidataFilterQID = null;
+
+const filterInput = document.getElementById("wikidataFilterInput");
+const suggestList = document.getElementById("wikidataSuggestList");
 
   // debounce 関数
   function debounce(func, wait) {
@@ -91,6 +95,75 @@ function OnLayerAdded() {
       timer = setTimeout(() => func.apply(this, args), wait);
     };
   }
+async function fetchSuggest(text) {
+  if (!text) return [];
+
+  const url =
+    `https://www.wikidata.org/w/api.php` +
+    `?action=wbsearchentities&search=${encodeURIComponent(text)}` +
+    `&language=ja&format=json&origin=*`;
+
+  const data = await fetch(url).then(r => r.json()).catch(() => null);
+
+  if (!data || !data.search) return [];
+  return data.search.map(item => ({ label: item.label, id: item.id }));
+}
+
+
+// ------------------------------
+// 2. サジェスト描画
+// ------------------------------
+function showSuggest(results) {
+  suggestList.innerHTML = "";
+  if (!results.length) {
+    suggestList.style.display = "none";
+    return;
+  }
+
+  suggestList.style.display = "block";
+
+  results.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item.label;
+
+    li.addEventListener("click", () => {
+      filterInput.value = item.label;
+      wikidataFilterQID = item.id;
+      suggestList.style.display = "none";
+
+      // フィルタ変更 → 再取得
+      if (group._map) group._map.fire("moveend");
+    });
+
+    suggestList.appendChild(li);
+  });
+}
+
+
+// ------------------------------
+// 3. 入力イベント（候補表示）
+// ------------------------------
+filterInput.addEventListener(
+  "input",
+  debounce(async () => {
+    const text = filterInput.value.trim();
+
+    // 入力が空 → フィルタ解除
+    if (!text) {
+      wikidataFilterQID = null;
+      suggestList.style.display = "none";
+      if (group._map) group._map.fire("moveend");
+      return;
+    }
+
+    const results = await fetchSuggest(text);
+    showSuggest(results);
+  }, 300)
+);
+
+filterInput.addEventListener("blur", () => {
+  setTimeout(() => (suggestList.style.display = "none"), 200);
+});
 
   // ==== Wikidata取得処理 ====
   const fetchWikidata = debounce(function () {
@@ -122,6 +195,7 @@ function OnLayerAdded() {
         SERVICE wikibase:label { 
           bd:serviceParam wikibase:language "ja,en,fr,de,nl,ru,es,it,pt,zh,ko,id".
         }
+        ${buildFilterClause()}
       }
       LIMIT ${limit}
     `;
