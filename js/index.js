@@ -48,7 +48,33 @@ var map = L.map('map', L.extend({
     
   });
 
-  //wikidata
+  // --------------------------------------
+// Wikidata LRU キャッシュ（最大100件）
+// --------------------------------------
+class LRUCache {
+  constructor(limit = 100) {
+    this.limit = limit;
+    this.map = new Map();
+  }
+  get(key) {
+    if (!this.map.has(key)) return null;
+    const val = this.map.get(key);
+    this.map.delete(key);
+    this.map.set(key, val);
+    return val;
+  }
+  set(key, val) {
+    if (this.map.has(key)) this.map.delete(key);
+    else if (this.map.size >= this.limit) {
+      const oldest = this.map.keys().next().value;
+      this.map.delete(oldest);
+    }
+    this.map.set(key, val);
+  }
+}
+const queryCache = new LRUCache(100);
+
+// Wikidata レイヤー
 var group = L.layerGroup([],
   { attribution: "Powered by <a href='https://www.wikidata.org/' target='_blank'>Wikidata</a>" }
 );
@@ -57,7 +83,7 @@ if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
 
 function OnLayerAdded() {
 
-  // ---- debounce 関数 ----
+  // debounce 関数
   function debounce(func, wait) {
     let timer;
     return function (...args) {
@@ -66,9 +92,25 @@ function OnLayerAdded() {
     };
   }
 
-  // ==== Wikidata ロード処理（デバウンス付き） ====
+  // ==== Wikidata取得処理 ====
   const fetchWikidata = debounce(function () {
-    var bounds = map.getBounds();
+    const bounds = map.getBounds();
+    const zoom = map.getZoom();
+
+    // ---- ズームレベルに応じて LIMIT を自動調整 ----
+    let limit = 1000;
+    if (zoom < 10) limit = 200;   // 広域 → 負荷軽減
+    if (zoom < 7) limit = 50;     // さらに広域 → もっと減らす
+
+    // キャッシュキー（bounds + limit）
+    const key = `${bounds.getWest().toFixed(3)},${bounds.getSouth().toFixed(3)},${bounds.getEast().toFixed(3)},${bounds.getNorth().toFixed(3)},L=${limit}`;
+
+    // ---- キャッシュチェック ----
+    const cacheResult = queryCache.get(key);
+    if (cacheResult) {
+      renderMarkers(cacheResult);
+      return;
+    }
 
     var sparql = `
       SELECT ?place ?placeLabel ?location WHERE {
@@ -78,15 +120,13 @@ function OnLayerAdded() {
           bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
         }
         SERVICE wikibase:label { 
-          bd:serviceParam wikibase:language "ja,en,de,fr,nl,ru,es,it,arz,pl,vi,war,ceb,sv,ar,uk,pt,zh,ko,id".
+          bd:serviceParam wikibase:language "ja,en,fr,de,nl,ru,es,it,pt,zh,ko,id".
         }
       }
-      LIMIT 1000
+      LIMIT ${limit}
     `;
 
-    // markers リセット
-    group.clearLayers();
-
+    // ---- Fetch ----
     fetch("https://query.wikidata.org/sparql", {
       method: "POST",
       headers: {
@@ -95,46 +135,45 @@ function OnLayerAdded() {
       },
       body: sparql
     })
-      .then(res => res.json())
-      .then(data => {
-        data.results.bindings.forEach(x => {
-          if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
-            var lon = parseFloat(RegExp.$1);
-            var lat = parseFloat(RegExp.$2);
-
-            var wikidataIcon = L.divIcon({
-              html: "<div class='wikidata'><a href='" + x.place.value + "' target='_blank'>" + x.placeLabel.value + "</a></div>",
-              className: 'wikidata',
-              iconSize: [10, 10],
-              iconAnchor: [5, 10]
-            });
-
-            L.marker([lat, lon], {
-              icon: wikidataIcon,
-              riseOnHover: true,
-            }).addTo(group);
-          }
-        });
+      .then(r => r.json())
+      .then(json => {
+        queryCache.set(key, json);
+        renderMarkers(json);
       })
-      .catch(err => {
-        console.error("Wikidata SPARQL Error:", err);
-      });
+      .catch(err => console.error("Wikidata SPARQL Error:", err));
 
-  }, 300); // ← ここでデバウンス時間設定（300ms）
+  }, 400); // デバウンス 400ms
 
+  // ---- マーカーを描画する関数 ----
+  function renderMarkers(json) {
+    group.clearLayers();
+    json.results.bindings.forEach(x => {
+      if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
+        const lon = parseFloat(RegExp.$1);
+        const lat = parseFloat(RegExp.$2);
 
-  // viewport 移動後にデータ読み込み
+        const wikidataIcon = L.divIcon({
+          html: `<div class='wikidata'><a href='${x.place.value}' target='_blank'>${x.placeLabel.value}</a></div>`,
+          className: 'wikidata',
+          iconSize: [10, 10],
+          iconAnchor: [5, 10]
+        });
+
+        L.marker([lat, lon], {
+          icon: wikidataIcon,
+          riseOnHover: true,
+        }).addTo(group);
+      }
+    });
+  }
+
   map.on("moveend", fetchWikidata);
-
-  // 初回ロード時も実行
-  fetchWikidata();
+  fetchWikidata();   // 初回ロード
 }
 
+// Wikidata レイヤー追加時
+group.on("add", OnLayerAdded);
 
-// Wikidata レイヤー追加時に実行
-group.on('add', function () {
-  OnLayerAdded();
-});
 
 //MSAIRoadDetections
 class ColorConverter {
