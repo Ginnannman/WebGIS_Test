@@ -106,3 +106,5 @@ html, body, #map {height: 100%; width: 100%;}
 .legend-swatch {
   width: 16px; height: 4px; border-radius: 2px; flex: none;
 }
+
+.legend-warn { color: #b45309; }
