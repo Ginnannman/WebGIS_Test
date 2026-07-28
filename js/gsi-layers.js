@@ -86,7 +86,21 @@ const GsiVector = (function () {
   return {
     roadsByCategory: () => layer("RdCL", new CategorySymbolizer()),
     roadsByBearing:  () => Bearing.attachAttribution(layer("RdCL", new SegmentBearingSymbolizer())),
-    buildingsByBearing: () => Bearing.attachAttribution(layer("BldA", new FootprintBearingSymbolizer(), 17)),
+     buildingsByBearing: () => {
+      const acc = new OrientationAccumulator();
+      return Bearing.attachAttribution(protomapsL.leafletLayer({
+        url: URL,
+        maxDataZoom: MAX_DATA_ZOOM,
+        levelDiff: 0,                       // 地理院デモと同じデータズームを要求する
+        devicePixelRatio: window.devicePixelRatio || 1,
+        attribution: ATTR,
+        paintRules: [
+          { dataLayer: "BldA", symbolizer: acc,                              maxzoom: 15 },
+          { dataLayer: "BldA", symbolizer: new OrientationGrid(acc),         maxzoom: 15 },
+          { dataLayer: "BldA", symbolizer: new FootprintBearingSymbolizer(), minzoom: 16 },
+        ],
+      }));
+    },
     CATEGORY,
   };
 })();
