@@ -81,8 +81,8 @@ const GsiVector = (function () {
 
   return {
     roadsByCategory: () => layer("RdCL", new CategorySymbolizer()),
-    roadsByBearing:  () => layer("RdCL", new SegmentBearingSymbolizer()),
-    buildingsByBearing: () => layer("BldA", new FootprintBearingSymbolizer()),
+    roadsByBearing:  () => Bearing.attachAttribution(layer("RdCL", new SegmentBearingSymbolizer())),
+    buildingsByBearing: () => Bearing.attachAttribution(layer("BldA", new FootprintBearingSymbolizer())),
     CATEGORY,
   };
 })();
