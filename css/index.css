@@ -56,3 +56,31 @@ html, body, #map {height: 100%; width: 100%;}
     box-sizing: border-box;
   }
 }
+
+.mesh-control {
+  background: white;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.mesh-control select {
+  font-size: 12px;
+  max-width: 15em;
+}
+.mesh-note {
+  margin-top: 4px;
+  color: #b45309;
+}
+.mesh-popup {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 12px;
+  font-size: 12px;
+}
+.mesh-popup dt { color: #555; }
+.mesh-popup dd {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
