@@ -103,13 +103,13 @@ const MSAIRD_ATTR =
   "<a href='https://opendatacommons.org/licenses/odbl/' target='_blank' rel='noopener'>ODbL</a>. " +
   "Data by <a href='https://github.com/microsoft/RoadDetections' target='_blank' rel='noopener'>Microsoft</a>.";
 
-const msRoadBearing = protomapsL.leafletLayer({
+const msRoadBearing = Bearing.attachAttribution(protomapsL.leafletLayer({
   url: MSAIRD_URL,
   maxDataZoom: 10,          // 配信タイルの最大ズーム。実際の値に合わせること
   devicePixelRatio: window.devicePixelRatio || 1,
   attribution: MSAIRD_ATTR,
   paintRules: [{ dataLayer: MSAIRD_LAYER, symbolizer: new BearingLineSymbolizer() }],
-});
+}));
 
 const msRoadPlain = protomapsL.leafletLayer({
   url: MSAIRD_URL,
