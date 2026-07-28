@@ -1,0 +1,3 @@
+leaflet 1.9.4
+jquery 3.7.1
+protomaps-leaflet 4.1.1
