@@ -1,56 +1,146 @@
-var map = L.map('map', L.extend({
-    preferCanvas:true,
-    zoomControl:false,
-    zoom: 10,
-    center: [35.6602488,139.6831213],
-  }, L.Hash.parseHash(location.hash)));
+"use strict";
 
-  L.control.scale({ maxWidth:250, position:'bottomright', imperial:false }).addTo(map);
-  L.control.zoom({position:'topright'}).addTo(map);
+// =====================================================================
+// 地図の初期化
+// =====================================================================
+const map = L.map("map", L.extend({
+  preferCanvas: true,
+  zoomControl: false,
+  zoom: 10,
+  center: [35.6602488, 139.6831213],
+}, L.Hash.parseHash(location.hash)));
 
-  //地図タイル
-  var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var gsipale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var gsiblank = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png',
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var gsiphoto = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var gsiinei = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png',
-    {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
-  var osmjp = L.tileLayer('https://tile.openstreetmap.jp/{z}/{x}/{y}.png',
-    {  attribution: "<a href='https://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
-  var opentopomap = L.tileLayer('https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
-    {attribution: "Kartendaten: ©<a href='https://openstreetmap.org/copyright' OpenStreetMap</a> -Mitwirkende, SRTM | Kartendarstellung: © <a href='http://opentopomap.org/'>OpenTopoMap</a> ( <a href='https://creativecommons.org/licenses/by-sa/3.0/'> CC-BY-SA</a>)"})
-  var mierunemono = L.tileLayer('https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
-    {attribution:  "Map tiles by <a href='http://mierune.co.jp' target='_blank'>MIERUNE</a>,under <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a> &mdash; Mapdata: &copy; <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a>contributors, under ODbL</a>"});
-  // var stamen = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-  //   {attribution: "Map tiles by <a href='http://stamen.com' target='_blank'>Stamen Design</a>, under <a href='http://creativecommons.org/licenses/by/3.0' target='_blank'>CC BY 3.0</a>. Data by <a href='http://openstreetmap.org' target='_blank'>OpenStreetMap</a>, under <a href='http://www.openstreetmap.org/copyright' target='_blank'>ODbL</a>."})
-  var blankbase = L.tileLayer('');
-  
+L.control.scale({ maxWidth: 250, position: "bottomright", imperial: false }).addTo(map);
+L.control.zoom({ position: "topright" }).addTo(map);
 
-  //標準地域二次メッシュ
-  $.getJSON("./data/hyoujun_mesh.geojson", function(data){
-    hyoujun_mesh2 = L.geoJson(data,{
-      onEachFeature: function(feature,layer){
-        layer.bindPopup("メッシュ番号"+feature.properties.Name);
-      },
-      attribution: "<a href='https://www.geospatial.jp/ckan/dataset/biodic-mesh/resource/d9e78516-6ba5-4863-bfcd-31326f8984db?inner_span=True'>環境省自然環境局生物多様性センター作成データ</a>をもとに加工して作成。ライセンス：<a href='https://www.env.go.jp/mail.html'>政府標準利用規約</a>",
-      style: {
-        "color":'#1e90ff',
-        "opacity": 0.5,
-        "fillColor": '#87cefa',
-        "fillOpacity": 0.2
-      }
-    });
-    LayerControl.addOverlay(hyoujun_mesh2,"標準地域2次メッシュ");
-    
-  });
+// =====================================================================
+// ベースマップ
+// maxNativeZoom は配信上限。地理院タイル一覧で要確認のうえ調整すること。
+// =====================================================================
+const GSI_ATTR =
+  "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank' rel='noopener'>地理院タイル</a>";
 
-  // --------------------------------------
-// Wikidata LRU キャッシュ（最大100件）
-// --------------------------------------
+const gsi = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+  { attribution: GSI_ATTR, maxZoom: 19, maxNativeZoom: 18 });
+const gsipale = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
+  { attribution: GSI_ATTR, maxZoom: 19, maxNativeZoom: 18 });
+const gsiblank = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png",
+  { attribution: GSI_ATTR, maxZoom: 19, maxNativeZoom: 14 });
+const gsiphoto = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+  { attribution: GSI_ATTR, maxZoom: 19, maxNativeZoom: 18 });
+const gsiinei = L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png",
+  { attribution: GSI_ATTR, maxZoom: 19, maxNativeZoom: 16 });
+
+const osmjp = L.tileLayer("https://tile.openstreetmap.jp/{z}/{x}/{y}.png", {
+  attribution: "&copy; <a href='https://osm.org/copyright' target='_blank' rel='noopener'>OpenStreetMap</a> contributors",
+  maxZoom: 19,
+});
+
+const opentopomap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+  subdomains: "abc",
+  maxZoom: 17,
+  attribution:
+    "Kartendaten: &copy; <a href='https://openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap</a>-Mitwirkende, SRTM | " +
+    "Kartendarstellung: &copy; <a href='https://opentopomap.org/' target='_blank' rel='noopener'>OpenTopoMap</a> " +
+    "(<a href='https://creativecommons.org/licenses/by-sa/3.0/' target='_blank' rel='noopener'>CC-BY-SA</a>)",
+});
+
+const mierunemono = L.tileLayer("https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png", {
+  maxZoom: 18,
+  attribution:
+    "Map tiles by <a href='https://mierune.co.jp' target='_blank' rel='noopener'>MIERUNE</a>, under " +
+    "<a href='https://creativecommons.org/licenses/by/4.0/' target='_blank' rel='noopener'>CC BY 4.0</a> &mdash; " +
+    "Map data &copy; <a href='https://openstreetmap.org' target='_blank' rel='noopener'>OpenStreetMap</a> contributors, under ODbL",
+});
+
+// 空のタイル URL はページ自身を取得しにいくため、空レイヤで代替する
+const blankbase = L.layerGroup([]);
+
+// =====================================================================
+// 標準地域2次メッシュ（オーバーレイ追加時に遅延読込）
+// 2-H で計算生成に置き換える予定。差し替えるのはこのローダのみ。
+// =====================================================================
+const meshLayer = L.geoJSON(null, {
+  attribution:
+    "<a href='https://www.geospatial.jp/ckan/dataset/biodic-mesh' target='_blank' rel='noopener'>環境省自然環境局生物多様性センター作成データ</a>" +
+    "をもとに加工して作成。ライセンス：" +
+    "<a href='https://www.digital.go.jp/resources/open_data/public_data_license_v1.0' target='_blank' rel='noopener'>政府標準利用規約</a>",
+  style: { color: "#1e90ff", opacity: 0.5, fillColor: "#87cefa", fillOpacity: 0.2 },
+  onEachFeature: (feature, layer) => {
+    layer.bindPopup("メッシュ番号 " + feature.properties.Name);
+  },
+});
+
+let meshLoaded = false;
+meshLayer.on("add", async () => {
+  if (meshLoaded) return;
+  meshLoaded = true;
+  try {
+    const res = await fetch("./data/hyoujun_mesh.geojson");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    meshLayer.addData(await res.json());
+  } catch (err) {
+    meshLoaded = false;
+    console.error("メッシュデータの読み込みに失敗しました:", err);
+  }
+});
+
+// =====================================================================
+// MS AI Road Detections
+// =====================================================================
+// 方位を巡回的な色に対応させる。周期が 90 度なのは、
+// 直交する街路を同一の格子方位として扱うため。
+const BEARING_COLORS = [
+  "#ff0000", "#ff7f00", "#ffff00", "#7fff00",
+  "#00ff00", "#00ff7f", "#00ffff", "#007fff",
+  "#0000ff", "#7f00ff", "#ff00ff", "#ff007f",
+];
+
+function bearingColor(deg) {
+  if (!Number.isFinite(deg)) return "#000000";
+  return BEARING_COLORS[Math.floor((deg + 3.75) / 7.5) % BEARING_COLORS.length];
+}
+
+class BearingLineSymbolizer {
+  draw(context, geom, z, feature) {
+    context.beginPath();
+    context.strokeStyle = bearingColor(feature.props["hougaku"]);
+    for (const poly of geom) {
+      poly.forEach((pt, i) => (i === 0 ? context.moveTo(pt.x, pt.y) : context.lineTo(pt.x, pt.y)));
+    }
+    context.stroke();
+  }
+}
+
+const MSAIRD_URL = "https://tile.shayato.net/Road/{z}/{x}/{y}.mvt";
+const MSAIRD_LAYER = "BingMapRoadDat_FeaturesToJSOV2";
+const MSAIRD_ATTR =
+  "Map tiles by Ginnannman, under " +
+  "<a href='https://opendatacommons.org/licenses/odbl/' target='_blank' rel='noopener'>ODbL</a>. " +
+  "Data by <a href='https://github.com/microsoft/RoadDetections' target='_blank' rel='noopener'>Microsoft</a>.";
+
+const msRoadBearing = protomapsL.leafletLayer({
+  url: MSAIRD_URL,
+  maxDataZoom: 10,          // 配信タイルの最大ズーム。実際の値に合わせること
+  devicePixelRatio: window.devicePixelRatio || 1,
+  attribution: MSAIRD_ATTR,
+  paintRules: [{ dataLayer: MSAIRD_LAYER, symbolizer: new BearingLineSymbolizer() }],
+});
+
+const msRoadPlain = protomapsL.leafletLayer({
+  url: MSAIRD_URL,
+  maxDataZoom: 10,
+  devicePixelRatio: window.devicePixelRatio || 1,
+  attribution: MSAIRD_ATTR,
+  paintRules: [{
+    dataLayer: MSAIRD_LAYER,
+    symbolizer: new protomapsL.LineSymbolizer({ color: "steelblue" }),
+  }],
+});
+
+// =====================================================================
+// Wikidata レイヤ
+// =====================================================================
 class LRUCache {
   constructor(limit = 100) {
     this.limit = limit;
@@ -65,323 +155,214 @@ class LRUCache {
   }
   set(key, val) {
     if (this.map.has(key)) this.map.delete(key);
-    else if (this.map.size >= this.limit) {
-      const oldest = this.map.keys().next().value;
-      this.map.delete(oldest);
-    }
+    else if (this.map.size >= this.limit) this.map.delete(this.map.keys().next().value);
     this.map.set(key, val);
   }
 }
+
 const queryCache = new LRUCache(100);
+const wikidataGroup = L.layerGroup([], {
+  attribution: "Powered by <a href='https://www.wikidata.org/' target='_blank' rel='noopener'>Wikidata</a>",
+});
 
-// Wikidata レイヤー
-var group = L.layerGroup([],
-  { attribution: "Powered by <a href='https://www.wikidata.org/' target='_blank'>Wikidata</a>" }
-);
-
-if (location.search.match(/^\?([a-zA-Z_]+)$/)) lang = RegExp.$1;
-
-function OnLayerAdded() {
-let wikidataFilterQID = null;
-
+const searchBox = document.getElementById("wikidataSearchBox");
 const filterInput = document.getElementById("wikidataFilterInput");
 const suggestList = document.getElementById("wikidataSuggestList");
 
-  // debounce 関数
-  function debounce(func, wait) {
-    let timer;
-    return function (...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => func.apply(this, args), wait);
-    };
-  }
-async function fetchSuggest(text) {
-  if (!text) return [];
+let filterQID = null;
+let inflight = null;
 
-  const url =
-    `https://www.wikidata.org/w/api.php` +
-    `?action=wbsearchentities&search=${encodeURIComponent(text)}` +
-    `&language=ja&format=json&origin=*`;
-
-  const data = await fetch(url).then(r => r.json()).catch(() => null);
-
-  if (!data || !data.search) return [];
-  return data.search.map(item => ({ label: item.label, id: item.id }));
+function debounce(fn, wait) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), wait);
+  };
 }
 
+async function fetchSuggest(text) {
+  const url = "https://www.wikidata.org/w/api.php"
+    + "?action=wbsearchentities&search=" + encodeURIComponent(text)
+    + "&language=ja&format=json&origin=*";
+  try {
+    const data = await (await fetch(url)).json();
+    return (data.search || [])
+      .filter((item) => /^Q[1-9][0-9]*$/.test(item.id))   // QID を検証
+      .map((item) => ({ label: item.label, id: item.id }));
+  } catch (err) {
+    console.error("Wikidata 検索に失敗しました:", err);
+    return [];
+  }
+}
 
-// ------------------------------
-// 2. サジェスト描画
-// ------------------------------
 function showSuggest(results) {
-  suggestList.innerHTML = "";
+  suggestList.replaceChildren();
   if (!results.length) {
     suggestList.style.display = "none";
     return;
   }
-
   suggestList.style.display = "block";
-
-  results.forEach(item => {
+  for (const item of results) {
     const li = document.createElement("li");
     li.textContent = item.label;
-
     li.addEventListener("click", () => {
       filterInput.value = item.label;
-      wikidataFilterQID = item.id;
+      filterQID = item.id;
       suggestList.style.display = "none";
-
-      // フィルタ変更 → 再取得
-      if (group._map) group._map.fire("moveend");
+      fetchWikidata();
     });
-
     suggestList.appendChild(li);
-  });
+  }
 }
 
-
-// ------------------------------
-// 3. 入力イベント（候補表示）
-// ------------------------------
-filterInput.addEventListener(
-  "input",
-  debounce(async () => {
-    const text = filterInput.value.trim();
-
-    // 入力が空 → フィルタ解除
-    if (!text) {
-      wikidataFilterQID = null;
-      suggestList.style.display = "none";
-      if (group._map) group._map.fire("moveend");
-      return;
-    }
-
-    const results = await fetchSuggest(text);
-    showSuggest(results);
-  }, 300)
-);
+filterInput.addEventListener("input", debounce(async () => {
+  const text = filterInput.value.trim();
+  if (!text) {
+    filterQID = null;
+    suggestList.style.display = "none";
+    fetchWikidata();
+    return;
+  }
+  showSuggest(await fetchSuggest(text));
+}, 300));
 
 filterInput.addEventListener("blur", () => {
   setTimeout(() => (suggestList.style.display = "none"), 200);
 });
 
-    function buildFilterClause() {
-  if (!wikidataFilterQID) return "";
-  return `
-    ?place (wdt:P31/wdt:P279*) wd:${wikidataFilterQID}.
+const fetchWikidata = debounce(function () {
+  if (!map.hasLayer(wikidataGroup)) return;
+
+  const bounds = map.getBounds();
+  const zoom = map.getZoom();
+  let limit = 1000;
+  if (zoom < 10) limit = 200;
+  if (zoom < 7) limit = 50;
+
+  // ズームと絞り込み条件をキーに含める。含めないと絞り込みが効かない
+  const key = [
+    zoom, filterQID || "-",
+    bounds.getWest().toFixed(4), bounds.getSouth().toFixed(4),
+    bounds.getEast().toFixed(4), bounds.getNorth().toFixed(4),
+  ].join("|");
+
+  const cached = queryCache.get(key);
+  if (cached) {
+    renderMarkers(cached);
+    return;
+  }
+
+  const filterClause = filterQID ? `?place (wdt:P31/wdt:P279*) wd:${filterQID}.` : "";
+  // 注意: ORDER BY を置いていないため、LIMIT で切られる集合は非決定的である
+  const sparql = `
+    SELECT ?place ?placeLabel ?location WHERE {
+      SERVICE wikibase:box {
+        ?place wdt:P625 ?location.
+        bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
+        bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
+      }
+      ${filterClause}
+      SERVICE wikibase:label {
+        bd:serviceParam wikibase:language "ja,en,fr,de,nl,ru,es,it,pt,zh,ko,id".
+      }
+    }
+    LIMIT ${limit}
   `;
-}
-  // ==== Wikidata取得処理 ====
-  const fetchWikidata = debounce(function () {
-    const bounds = map.getBounds();
-    const zoom = map.getZoom();
 
-    // ---- ズームレベルに応じて LIMIT を自動調整 ----
-    let limit = 1000;
-    if (zoom < 10) limit = 200;   // 広域 → 負荷軽減
-    if (zoom < 7) limit = 50;     // さらに広域 → もっと減らす
+  if (inflight) inflight.abort();
+  inflight = new AbortController();
 
-    // キャッシュキー（bounds + limit）
-    const key = `${bounds.getWest().toFixed(3)},${bounds.getSouth().toFixed(3)},${bounds.getEast().toFixed(3)},${bounds.getNorth().toFixed(3)},L=${limit}`;
-
-    // ---- キャッシュチェック ----
-    const cacheResult = queryCache.get(key);
-    if (cacheResult) {
-      renderMarkers(cacheResult);
-      return;
-    }
-
-    var sparql = `
-      SELECT ?place ?placeLabel ?location WHERE {
-        SERVICE wikibase:box {
-          ?place wdt:P625 ?location.
-          bd:serviceParam wikibase:cornerWest "Point(${bounds.getWest()} ${bounds.getNorth()})"^^geo:wktLiteral.
-          bd:serviceParam wikibase:cornerEast "Point(${bounds.getEast()} ${bounds.getSouth()})"^^geo:wktLiteral.
-        }
-        SERVICE wikibase:label { 
-          bd:serviceParam wikibase:language "ja,en,fr,de,nl,ru,es,it,pt,zh,ko,id".
-        }
-        ${buildFilterClause()}
-      }
-      LIMIT ${limit}
-    `;
-
-    // ---- Fetch ----
-    fetch("https://query.wikidata.org/sparql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/sparql-query",
-        "Accept": "application/sparql-results+json"
-      },
-      body: sparql
+  fetch("https://query.wikidata.org/sparql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/sparql-query",
+      "Accept": "application/sparql-results+json",
+    },
+    body: sparql,
+    signal: inflight.signal,
+  })
+    .then((r) => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
     })
-      .then(r => r.json())
-      .then(json => {
-        queryCache.set(key, json);
-        renderMarkers(json);
-      })
-      .catch(err => console.error("Wikidata SPARQL Error:", err));
-
-  }, 400); // デバウンス 400ms
-
-  // ---- マーカーを描画する関数 ----
-  function renderMarkers(json) {
-    group.clearLayers();
-    json.results.bindings.forEach(x => {
-      if (x.location.value.match(/^Point\((.+) (.+)\)$/)) {
-        const lon = parseFloat(RegExp.$1);
-        const lat = parseFloat(RegExp.$2);
-
-        const wikidataIcon = L.divIcon({
-          html: `<div class='wikidata'><a href='${x.place.value}' target='_blank'>${x.placeLabel.value}</a></div>`,
-          className: 'wikidata',
-          iconSize: [10, 10],
-          iconAnchor: [5, 10]
-        });
-
-        L.marker([lat, lon], {
-          icon: wikidataIcon,
-          riseOnHover: true,
-        }).addTo(group);
-      }
+    .then((json) => {
+      queryCache.set(key, json);
+      renderMarkers(json);
+    })
+    .catch((err) => {
+      if (err.name !== "AbortError") console.error("Wikidata SPARQL エラー:", err);
     });
-  }
+}, 400);
 
+// ラベルは Wikidata 上で誰でも編集できる自由文字列なので、
+// HTML を組み立てず DOM ノードとして渡す
+function renderMarkers(json) {
+  wikidataGroup.clearLayers();
+  for (const x of json.results.bindings) {
+    const m = /^Point\(([-\d.eE+]+) ([-\d.eE+]+)\)$/.exec(x.location.value);
+    if (!m) continue;
+    const lon = parseFloat(m[1]);
+    const lat = parseFloat(m[2]);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+
+    const box = document.createElement("div");
+    box.className = "wikidata";
+
+    const a = document.createElement("a");
+    if (/^https?:\/\//.test(x.place.value)) a.href = x.place.value;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = x.placeLabel ? x.placeLabel.value : x.place.value;
+    box.appendChild(a);
+
+    L.marker([lat, lon], {
+      icon: L.divIcon({ html: box, className: "wikidata", iconSize: [10, 10], iconAnchor: [5, 10] }),
+      riseOnHover: true,
+    }).addTo(wikidataGroup);
+  }
+}
+
+// 購読は add / remove で対称に。二重登録と、非表示中の無駄なクエリを防ぐ
+wikidataGroup.on("add", () => {
+  searchBox.style.display = "block";
   map.on("moveend", fetchWikidata);
-  fetchWikidata();   // 初回ロード
-}
-
-// Wikidata レイヤー追加時
-group.on("add", OnLayerAdded);
-
-
-//MSAIRoadDetections
-class ColorConverter {
-  static getColorFromKakudo(kakudo) {
-    let resultColor = "#000000";
-    if ((kakudo >= 0 && kakudo < 3.75) || (kakudo >= 90 && kakudo < 93.75)) {
-      resultColor = "#ff0000";
-    } else if ((kakudo >= 3.75 && kakudo < 11.25) || (kakudo >= 93.75 && kakudo < 101.25)) {
-      resultColor = "#ff7f00";
-    } else if ((kakudo >= 11.25 && kakudo < 18.75) || (kakudo >= 101.25 && kakudo < 108.75)) {
-      resultColor = "#ffff00";
-    } else if ((kakudo >= 18.75 && kakudo < 26.25) || (kakudo >= 108.75 && kakudo < 116.25)) {
-      resultColor = "#7fff00";
-    } else if ((kakudo >= 26.25 && kakudo < 33.75) || (kakudo >= 116.25 && kakudo < 123.75)) {
-      resultColor = "#00ff00";
-    } else if ((kakudo >= 33.75 && kakudo < 41.25) || (kakudo >= 123.75 && kakudo < 131.25)) {
-      resultColor = "#00ff7f";
-    } else if ((kakudo >= 41.25 && kakudo < 48.75) || (kakudo >= 131.25 && kakudo < 138.75)) {
-      resultColor = "#00ffff";
-    } else if ((kakudo >= 48.75 && kakudo < 56.25) || (kakudo >= 138.75 && kakudo < 146.25)) {
-      resultColor = "#007fff";
-    } else if ((kakudo >= 56.25 && kakudo < 63.75) || (kakudo >= 146.25 && kakudo < 153.75)) {
-      resultColor = "#0000ff";
-    } else if ((kakudo >= 63.75 && kakudo < 71.25) || (kakudo >= 153.75 && kakudo < 161.25)) {
-      resultColor = "#7f00ff";
-    } else if ((kakudo >= 71.25 && kakudo < 78.75) || (kakudo >= 161.25 && kakudo < 168.75)) {
-      resultColor = "#ff00ff";
-    } else if ((kakudo >= 78.75 && kakudo < 86.25) || (kakudo >= 168.75 && kakudo < 176.25)) {
-      resultColor = "#ff007f";
-    } else if ((kakudo >= 86.25 && kakudo < 90) || (kakudo >= 176.25 && kakudo <= 180)) {
-      resultColor = "#ff0000";
-    }
-
-    return resultColor;
-  }
-}
-
-class MyLineSymbolizer{
-    draw(context,geom,z,feature){
-        var kakudo = feature.props["hougaku"];
-         context.beginPath();
-         context.strokeStyle = ColorConverter.getColorFromKakudo(kakudo);
-            for (var poly of geom) {
-            for (var p = 0; p < poly.length; p++) {
-                let pt = poly[p];
-                if (p == 0) context.moveTo(pt.x,pt.y);
-                else context.lineTo(pt.x,pt.y);
-            } 
-        }
-         context.stroke();
-    }
-}
-const PAINT_RULES_COLOR = [
-    {
-        dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
-        symbolizer: new MyLineSymbolizer()
-    }   
-];
-
-const PAINT_RULES_BLACK = [
-    {
-        dataLayer:"BingMapRoadDat_FeaturesToJSOV2",
-        symbolizer: new protomapsL.LineSymbolizer({fill:"steelblue"}),
-    }   
-];
-const PMTILES_URL = 'https://tile.shayato.net/Road/{z}/{x}/{y}.mvt';
-
-const groupColor = L.layerGroup([], {
-  MaxNativeZoom: 10,
-  attribution: "Map tiles by Ginnannman, under <a href='https://opendatacommons.org/licenses/odbl/'>ODbL</a>. Data by <a href='https://github.com/microsoft/RoadDetections'>Microsoft</a>."
+  fetchWikidata();
 });
 
-const groupBlack = L.layerGroup([], {
-  MaxNativeZoom: 10,
-  attribution: groupColor.options.attribution
+wikidataGroup.on("remove", () => {
+  searchBox.style.display = "none";
+  map.off("moveend", fetchWikidata);
+  if (inflight) inflight.abort();
+  wikidataGroup.clearLayers();
 });
 
-const MSAIRD_Color = protomapsL.leafletLayer({
-  url: PMTILES_URL,
-  paint_rules: PAINT_RULES_COLOR
-}).addTo(groupColor);
+// =====================================================================
+// レイヤコントロール
+// =====================================================================
+const baseMaps = {
+  "地理院地図": gsi,
+  "地理院 淡色地図": gsipale,
+  "地理院 白地図": gsiblank,
+  "地理院 写真": gsiphoto,
+  "地理院 陰影起伏図": gsiinei,
+  "オープンストリートマップ（日本）": osmjp,
+  "オープントポマップ": opentopomap,
+  "MIERUNE 白地図": mierunemono,
+  "ベースマップなし": blankbase,
+};
 
-const MSAIRD_Black = protomapsL.leafletLayer({
-  url: PMTILES_URL,
-  paint_rules: PAINT_RULES_BLACK
-}).addTo(groupBlack);
+const overlays = {
+  "wikidata": wikidataGroup,
+  "標準地域2次メッシュ": meshLayer,
+  "MS道路データ（単色）": msRoadPlain,
+  "MS道路データ（方位別）": msRoadBearing,
+};
 
-  //BaseMap
-  var BaseMaps = {
-    "地理院地図" : gsi,
-    "地理院 淡色地図" : gsipale,
-    "地理院 白地図" : gsiblank,
-    "地理院 写真" : gsiphoto,
-    "地理院 陰影起伏図": gsiinei,
-    "オープンストリートマップ（日本）" : osmjp,
-    "オープントポマップ": opentopomap,
-    "MIERUNE 白地図" : mierunemono,
-    //"Stamen Toner（白黒地図）" : stamen,
-    "ベースマップなし" : blankbase  
-  };
-  //OverLay
-  var OverLays = {
-      "wikidata": group,
-      // "MS道路データ（黒）": groupBlack,
-      // "MS道路データ（カラー・試験中）": groupColor,
-  };
-  var LayerControl = L.control.layers(BaseMaps, OverLays, {collapsed:false, position:'topleft'}).addTo(map);
-  gsi.addTo(map); 
-const wikidataSearchBox = document.getElementById("wikidataSearchBox");
+L.control.layers(baseMaps, overlays, { collapsed: false, position: "topleft" }).addTo(map);
+gsi.addTo(map);
 
-// wikidataレイヤー追加時
-map.on("overlayadd", function (e) {
-  if (e.name === "wikidata") {
-    wikidataSearchBox.style.display = "block"; // 表示
-  }
-});
+L.control.mapCenterCoord({
+  position: "bottomleft", onMove: true, latlngFormat: "DMS", latlngDesignators: true,
+}).addTo(map);
 
-// レイヤー削除時
-map.on("overlayremove", function (e) {
-  if (e.name === "wikidata") {
-    wikidataSearchBox.style.display = "none";  // 非表示
-  }
-});
-  
-  //中心十字・座標
-  L.control.mapCenterCoord({position:'bottomleft', onMove:true, latlngFormat:'DMS', latlngDesignators:true}).addTo(map);
-
-  //URLハッシュ
-  L.hash(map);
-
- 
+L.hash(map);
