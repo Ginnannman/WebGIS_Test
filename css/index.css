@@ -2,17 +2,27 @@ body {padding: 0; margin: 0}
 html, body, #map {height: 100%; width: 100%;}
 
 #wikidataSearchBox {
-  position: relative;          /* 候補リストの基準にするためだけの relative */
-  background: white;
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  width: auto;
+  margin: 0;
+  background: #fff;
   padding: 6px 8px;
   border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
   font-size: 12px;
 }
+
 #wikidataFilterInput {
   width: 14em;
-  max-width: 60vw;
+  max-width: 55vw;
   font-size: 12px;
+  box-sizing: border-box;
 }
+
 #wikidataSuggestList {
   position: absolute;
   top: 100%;
@@ -21,7 +31,7 @@ html, body, #map {height: 100%; width: 100%;}
   margin: 2px 0 0;
   padding: 0;
   list-style: none;
-  background: white;
+  background: #fff;
   border: 1px solid #ccc;
   max-height: 40vh;
   overflow-y: auto;
@@ -29,27 +39,12 @@ html, body, #map {height: 100%; width: 100%;}
 }
 
 #wikidataSuggestList li {
-  padding: 6px;
+  padding: 3px 6px;
   cursor: pointer;
 }
 
-#wikidataSuggestList li:hover,
-#wikidataSuggestList li.active {
-  background: #e6f0ff;
-}
-
-@media (max-width: 600px) {
-  #wikidataSearchBox {
-    top: auto;
-    bottom: 24px;
-    left: 6px;
-    right: 6px;
-  }
-  #wikidataFilterInput,
-  #wikidataSuggestList {
-    width: 100%;
-    box-sizing: border-box;
-  }
+#wikidataSuggestList li:hover {
+  background: #eef3ff;
 }
 
 .mesh-control {
