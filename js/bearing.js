@@ -5,11 +5,28 @@
  * 直交する要素を同一の格子方位とみなすため。          */
 const Bearing = (function () {
 
-  const COLORS = [
-    "#ff0000", "#ff7f00", "#ffff00", "#7fff00",
-    "#00ff00", "#00ff7f", "#00ffff", "#007fff",
-    "#0000ff", "#7f00ff", "#ff00ff", "#ff007f",
-  ];
+ /* CET 巡回カラーマップ（Peter Kovesi）を 12 区分のビン中心で標本化したもの。
+   * colorcet 3.2.1 より取得。CC BY 4.0。
+   * 方位は 90 度周期の軸データなので、明度が一定の C10 を既定とする。
+   * 明度が変動するマップでは、特定の方位帯だけが視覚的に強調されてしまう。 */
+
+  const PALETTES = {
+    // CET-C10 (circle_mgbm_67_c31) — 等輝度 L*=67。既定。
+    C10: [
+      "#d3947a", "#be9d6e", "#a4a66d", "#85ad7c",
+      "#66b197", "#48b2b4", "#49afcb", "#71a8d6",
+      "#989fd7", "#bb96c8", "#d190ae", "#da8e92",
+    ],
+    // CET-C6s (cyclic_rygcbmr_50_90_c64_s25) — L* 59–80。高彩度が要るとき。
+    C6s: [
+      "#d8b7ff", "#ffa2b4", "#ff5045", "#f95906",
+      "#ffb300", "#cccc00", "#68a506", "#2ca751",
+      "#2fdbbb", "#2dd7fd", "#2894ff", "#7a89ff",
+    ],
+  };
+
+  const COLORS = PALETTES.C10;
+
   const STEP = 90 / COLORS.length;   // 7.5 度
 
   function color(deg) {
@@ -64,6 +81,27 @@ const Bearing = (function () {
     }
     return svg;
   }
-
-  return { color, ofSegment, axialMean, wheel, COLORS };
+  const ATTRIBUTION =
+    "配色: <a href='https://colorcet.com/' target='_blank' rel='noopener'>" +
+    "CET perceptually uniform colour maps</a> (Kovesi 2015, CC BY 4.0)";
+  
+  /* 方位配色を使うレイヤに出典表示を結び付ける。
+   * 表示中だけ出典が出て、複数レイヤで重複しない。 */
+  function attachAttribution(layer) {
+    let bound = null;
+    layer.on("add", (e) => {
+      bound = e.target._map;                       // add 時点では必ず設定済み
+      if (bound && bound.attributionControl) {
+        bound.attributionControl.addAttribution(ATTRIBUTION);
+      }
+    });
+    layer.on("remove", () => {
+      if (bound && bound.attributionControl) {     // remove 後は _map が消えるため保持した参照を使う
+        bound.attributionControl.removeAttribution(ATTRIBUTION);
+      }
+      bound = null;
+    });
+    return layer;
+  }
+  return { color, ofSegment, axialMean, wheel, attachAttribution, ATTRIBUTION, COLORS };
 })();
