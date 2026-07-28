@@ -33,7 +33,7 @@ jobs:
         run: |
           rm -rf vendor
           : > /tmp/versions.txt
-          for pkg in leaflet jquery protomaps-leaflet; do
+           for pkg in $(node -p "Object.keys(require('./package.json').dependencies).join(' ')"); do
             mkdir -p "vendor/$pkg"
             cp -r "node_modules/$pkg/dist/." "vendor/$pkg/"
             find "node_modules/$pkg" -maxdepth 1 \( -iname 'LICENSE*' -o -iname 'LICENCE*' \) \
