@@ -43,3 +43,16 @@ html, body, #map {height: 100%; width: 100%;}
   background: #e6f0ff;
 }
 
+@media (max-width: 600px) {
+  #wikidataSearchBox {
+    top: auto;
+    bottom: 24px;
+    left: 6px;
+    right: 6px;
+  }
+  #wikidataFilterInput,
+  #wikidataSuggestList {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
