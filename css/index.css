@@ -2,35 +2,30 @@ body {padding: 0; margin: 0}
 html, body, #map {height: 100%; width: 100%;}
 
 #wikidataSearchBox {
-  position: absolute;
-  top: 80px;
-  right: 6px;
-  z-index: 9999;
+  position: relative;          /* 候補リストの基準にするためだけの relative */
   background: white;
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
-  display: none;
-}
-
-#wikidataFilterInput {
-  width: 240px;
-  padding: 6px;
-  border: 1px solid #ddd;
+  padding: 6px 8px;
   border-radius: 4px;
+  font-size: 12px;
 }
-
+#wikidataFilterInput {
+  width: 14em;
+  max-width: 60vw;
+  font-size: 12px;
+}
 #wikidataSuggestList {
-  margin: 4px 0 0 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 2px 0 0;
   padding: 0;
   list-style: none;
-  width: 240px;
-  max-height: 160px;
   background: white;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  max-height: 40vh;
   overflow-y: auto;
-  display: none; 
+  z-index: 1000;
 }
 
 #wikidataSuggestList li {
