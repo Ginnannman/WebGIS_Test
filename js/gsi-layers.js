@@ -6,9 +6,13 @@ const GsiVector = (function () {
   const MAX_DATA_ZOOM = 16;
   const ATTR = "<a href='https://github.com/gsi-cyberjapan/optimal_bvmap' " +
                "target='_blank' rel='noopener'>国土地理院最適化ベクトルタイル</a>";
-   const TILE_SPAN = 256;                 // levelDiff: 0 のとき
+
+  /* 建築物レイヤは levelDiff: 0 で読むため、ジオメトリの正規化幅は
+   * 256 << 0 = 256 になる。道路レイヤ（既定の levelDiff: 1）は 512。
+   * クリップ辺の判定はポリゴンでしか要らないので、建物側の値だけ持つ。 */
+  const BLD_TILE_SPAN = 256;
   const GRID = 4;
-  const CELL = TILE_SPAN / GRID;
+  const CELL = BLD_TILE_SPAN / GRID;
 
   // vt_rdctg の全値（style/std.json より）
   const CATEGORY = {
@@ -41,9 +45,10 @@ const GsiVector = (function () {
     }
   }
 
-  // ---- 道路中心線：方位塗り分け（線分単位） ------------------------------
+  // ---- 道路中心線：方位塗り分け（線分単位）------------------------------
+  // 線を切断しても各線分の向きは変わらないので、クリップ辺の考慮は不要
   class SegmentBearingSymbolizer {
-    draw(context, geom, z, feature) {
+    draw(context, geom) {
       context.lineWidth = 2.0;
       context.lineCap = "round";
       for (const ring of geom) {
@@ -59,7 +64,7 @@ const GsiVector = (function () {
     }
   }
 
-  // ---- 建築物：長軸方位塗り分け ------------------------------------------
+  // ---- 建築物：長軸方位塗り分け（ズーム 16 以上）-------------------------
   class FootprintBearingSymbolizer {
     draw(context, geom) {
       context.beginPath();
@@ -67,31 +72,66 @@ const GsiVector = (function () {
         ring.forEach((pt, i) => (i === 0 ? context.moveTo(pt.x, pt.y) : context.lineTo(pt.x, pt.y)));
         context.closePath();
       }
-      context.fillStyle = Bearing.color(Bearing.axialMean(geom));
+      context.fillStyle = Bearing.color(Bearing.axialMean(geom, BLD_TILE_SPAN));
       context.fill("evenodd");
     }
   }
 
-  function layer(dataLayer, symbolizer, minzoom) {
+  // ---- 建築物：ズーム 15 以下の集計表示 ----------------------------------
+  // タイル 1 枚を GRID×GRID に区切り、卓越方位を色、集中度を不透明度で示す
+  class OrientationAccumulator {
+    constructor() { this.cells = new Map(); }
+    before() { this.cells.clear(); }
+    draw(context, geom, z, feature) {
+      const b = feature.bbox;
+      const cx = (b.minX + b.maxX) / 2, cy = (b.minY + b.maxY) / 2;
+      if (cx < 0 || cy < 0 || cx >= BLD_TILE_SPAN || cy >= BLD_TILE_SPAN) return;
+      const key = Math.floor(cy / CELL) * GRID + Math.floor(cx / CELL);
+      let c = this.cells.get(key);
+      if (!c) { c = { sx: 0, sy: 0, w: 0, n: 0 }; this.cells.set(key, c); }
+      Bearing.accumulate(geom, c, BLD_TILE_SPAN);
+      c.n++;
+    }
+  }
+
+  class OrientationGrid {
+    constructor(acc) { this.acc = acc; }
+    before(context) {
+      for (const [key, c] of this.acc.cells) {
+        if (c.n < 5 || c.w === 0) continue;
+        const R = Math.hypot(c.sx, c.sy) / c.w;     // 集中度 0–1
+        context.globalAlpha = 0.20 + 0.70 * R;
+        context.fillStyle = Bearing.color(Bearing.fromSums(c.sx, c.sy));
+        context.fillRect((key % GRID) * CELL, Math.floor(key / GRID) * CELL, CELL, CELL);
+      }
+      context.globalAlpha = 1;
+    }
+    draw() {}
+  }
+
+  // ---- レイヤ生成 --------------------------------------------------------
+  function roadLayer(symbolizer) {
     return protomapsL.leafletLayer({
       url: URL,
       maxDataZoom: MAX_DATA_ZOOM,
-      levelDiff: 0,
       devicePixelRatio: window.devicePixelRatio || 1,
       attribution: ATTR,
-      paintRules: [{ dataLayer: dataLayer, symbolizer: symbolizer, minzoom: minzoom }],
+      paintRules: [{ dataLayer: "RdCL", symbolizer: symbolizer }],
     });
   }
 
   return {
-    roadsByCategory: () => layer("RdCL", new CategorySymbolizer()),
-    roadsByBearing:  () => Bearing.attachAttribution(layer("RdCL", new SegmentBearingSymbolizer())),
-     buildingsByBearing: () => {
+    roadsByCategory: () => roadLayer(new CategorySymbolizer()),
+
+    roadsByBearing: () =>
+      Bearing.attachAttribution(roadLayer(new SegmentBearingSymbolizer())),
+
+    buildingsByBearing: () => {
       const acc = new OrientationAccumulator();
       return Bearing.attachAttribution(protomapsL.leafletLayer({
         url: URL,
         maxDataZoom: MAX_DATA_ZOOM,
-        levelDiff: 0,                       // 地理院デモと同じデータズームを要求する
+        levelDiff: 0,                     // 地理院デモと同じデータズームを要求する
         devicePixelRatio: window.devicePixelRatio || 1,
         attribution: ATTR,
         paintRules: [
@@ -101,6 +141,7 @@ const GsiVector = (function () {
         ],
       }));
     },
+
     CATEGORY,
   };
 })();
