@@ -347,12 +347,37 @@ const overlays = {
 L.control.layers(baseMaps, overlays, { collapsed: false, position: "topleft" }).addTo(map);
 gsi.addTo(map);
 
+const MapLegend = L.Control.extend({
+   options: { position: "bottomright" },
+   initialize(options) {
+     L.Util.setOptions(this, options);
+     this._entries = new Map(); 
+  },
+     
 new MapLegend()
 .register(gsiRoadCategory, "category", "道路種別")
 .register(gsiRoadBearing,  "bearing",  "道路方位")
 .register(gsiBuildingAxis, "bearing",  "建物長軸方位", 17)
 .register(msRoadBearing,   "bearing",  "MS道路 方位")
 .addTo(map);
+
+ onAdd(map) {
+     this._div = L.DomUtil.create("div", "map-legend");
+     L.DomEvent.disableClickPropagation(this._div);
+   map.on("overlayadd overlayremove zoomend", () => this._render());
+     this._map = map;
+     this._render();
+     return this._div;
+   },
+
+register(layer, kind, title, zoomFloor) {
+    this._entries.set(layer, { kind, title, zoomFloor });
+     return this;
+   },
+ 
+   _render() {
+    if (!this._map || !this._div) return;
+     this._div.replaceChildren();
 
 L.control.mapCenterCoord({
   position: "bottomleft", onMove: true, latlngFormat: "DMS", latlngDesignators: true,
