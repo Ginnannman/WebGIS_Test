@@ -3,12 +3,12 @@
 // =====================================================================
 // 地図の初期化
 // =====================================================================
-const map = L.map("map", L.extend({
+const map = L.map("map", {
   preferCanvas: true,
   zoomControl: false,
   zoom: 10,
   center: [35.6602488, 139.6831213],
-}, L.Hash.parseHash(location.hash)));
+});
 
 L.control.scale({ maxWidth: 250, position: "bottomright", imperial: false }).addTo(map);
 L.control.zoom({ position: "topright" }).addTo(map);
@@ -358,4 +358,12 @@ L.control.mapCenterCoord({
   position: "bottomleft", onMove: true, latlngFormat: "DMS", latlngDesignators: true,
 }).addTo(map);
 
-L.hash(map);
+UrlState.init(map, {
+  wd:    wikidataGroup,
+  mesh:  meshLayer,
+  msp:   msRoadPlain,
+  msb:   msRoadBearing,
+  gcat:  gsiRoadCategory,
+  gbrg:  gsiRoadBearing,
+  gbld:  gsiBuildingAxis,
+}, meshLayer);
