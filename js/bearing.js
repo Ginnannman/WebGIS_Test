@@ -40,22 +40,33 @@ const Bearing = (function () {
     return ((deg % 90) + 90) % 90;
   }
 
+
+  const TILE_SPAN = 512;
+  const EDGE_EPS = 0.01;
+ function isClipEdge(a, b) {
+    if (a.x === b.x && (a.x <= EDGE_EPS || a.x >= TILE_SPAN - EDGE_EPS)) return true;
+    if (a.y === b.y && (a.y <= EDGE_EPS || a.y >= TILE_SPAN - EDGE_EPS)) return true;
+    return false;
+  }
+ 
   /* 環（リング）群の辺長重み付き円周平均。
    * 周期 90 度なので角度を 4 倍して単位円上に写し、平均後に 4 で割る。 */
   function axialMean(rings) {
-    let sx = 0, sy = 0;
+    let sx = 0, sy = 0, used = 0;
     for (const ring of rings) {
       for (let i = 1; i < ring.length; i++) {
         const a = ring[i - 1], b = ring[i];
+        if (isClipEdge(a, b)) continue;
         const dx = b.x - a.x, dy = b.y - a.y;
         const w = Math.hypot(dx, dy);
         if (w === 0) continue;
         const phi = 4 * ofSegment(a, b) * Math.PI / 180;
         sx += w * Math.cos(phi);
         sy += w * Math.sin(phi);
+        used++;
       }
     }
-    if (sx === 0 && sy === 0) return NaN;
+    if (used < 2 || (sx === 0 && sy === 0)) return NaN;
     let deg = Math.atan2(sy, sx) * 180 / Math.PI / 4;
     return ((deg % 90) + 90) % 90;
   }
