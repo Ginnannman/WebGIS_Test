@@ -162,6 +162,14 @@ async function fetchSuggest(text) {
     return [];
   }
 }
+const SearchBoxControl = L.Control.extend({
+  options: { position: "topright" },
+  onAdd() {
+    L.DomEvent.disableClickPropagation(searchBox);
+    L.DomEvent.disableScrollPropagation(searchBox);
+    return searchBox;
+  },
+});
 
 function showSuggest(results) {
   suggestList.replaceChildren();
