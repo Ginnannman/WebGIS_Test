@@ -263,13 +263,13 @@ const fetchWikidata = debounce(function () {
   inflight = new AbortController();
 
   const endpoint = "https://query.wikidata.org/sparql?query="
-+    + encodeURIComponent(sparql);
-+
-+  fetch(endpoint, {
-+    method: "GET",
-+    headers: { "Accept": "application/sparql-results+json" },
-+    signal: inflight.signal,
-+  })
+    + encodeURIComponent(sparql);
+
+  fetch(endpoint, {
+    method: "GET",
+    headers: { "Accept": "application/sparql-results+json" },
+    signal: inflight.signal,
+  })
     .then((r) => {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
