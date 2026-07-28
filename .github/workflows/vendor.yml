@@ -1,0 +1,56 @@
+name: Vendor dependencies
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/vendor.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vendor
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Rebuild vendor/
+        run: |
+          rm -rf vendor
+          : > /tmp/versions.txt
+          for pkg in leaflet jquery protomaps-leaflet; do
+            mkdir -p "vendor/$pkg"
+            cp -r "node_modules/$pkg/dist/." "vendor/$pkg/"
+            find "node_modules/$pkg" -maxdepth 1 \( -iname 'LICENSE*' -o -iname 'LICENCE*' \) \
+              -exec cp {} "vendor/$pkg/" \;
+            node -p "const p=require('./node_modules/$pkg/package.json'); p.name+' '+p.version" \
+              >> /tmp/versions.txt
+          done
+          mv /tmp/versions.txt vendor/VERSIONS.txt
+
+      - name: Commit
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A vendor package-lock.json
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+          else
+            git commit -m 'chore: sync vendor/ from npm'
+            git push
+          fi
