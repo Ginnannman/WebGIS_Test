@@ -57,19 +57,9 @@ const mierunemono = L.tileLayer("https://tile.mierune.co.jp/mierune_mono/{z}/{x}
 const blankbase = L.layerGroup([]);
 
 // =====================================================================
-// 標準地域2次メッシュ（オーバーレイ追加時に遅延読込）
-// 2-H で計算生成に置き換える予定。差し替えるのはこのローダのみ。
+// 標準地域メッシュ（JIS X 0410 に基づき計算生成）
 // =====================================================================
-const meshLayer = L.geoJSON(null, {
-  attribution:
-    "<a href='https://www.geospatial.jp/ckan/dataset/biodic-mesh' target='_blank' rel='noopener'>環境省自然環境局生物多様性センター作成データ</a>" +
-    "をもとに加工して作成。ライセンス：" +
-    "<a href='https://www.digital.go.jp/resources/open_data/public_data_license_v1.0' target='_blank' rel='noopener'>政府標準利用規約</a>",
-  style: { color: "#1e90ff", opacity: 0.5, fillColor: "#87cefa", fillOpacity: 0.2 },
-  onEachFeature: (feature, layer) => {
-    layer.bindPopup("メッシュ番号 " + feature.properties.Name);
-  },
-});
+const meshLayer = MeshGrid.createLayer({ order: 2 });
 
 let meshLoaded = false;
 meshLayer.on("add", async () => {
@@ -352,7 +342,7 @@ const baseMaps = {
 
 const overlays = {
   "wikidata": wikidataGroup,
-  "標準地域2次メッシュ": meshLayer,
+  "標準地域メッシュ": meshLayer,
   "MS道路データ（単色）": msRoadPlain,
   "MS道路データ（方位別）": msRoadBearing,
 };
