@@ -4,7 +4,6 @@
   "description": "Leaflet WebGIS experiment. Dependencies are vendored into vendor/ by GitHub Actions.",
   "dependencies": {
     "leaflet": "^1.9.4",
-    "jquery": "^3.7.1",
-    "protomaps-leaflet": "^4.0.0"
+    "protomaps-leaflet": "^5.1.0"
   }
 }
