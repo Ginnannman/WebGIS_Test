@@ -69,20 +69,20 @@ const GsiVector = (function () {
     }
   }
 
-  function layer(dataLayer, symbolizer) {
+  function layer(dataLayer, symbolizer, minzoom) {
     return protomapsL.leafletLayer({
       url: URL,
       maxDataZoom: MAX_DATA_ZOOM,
       devicePixelRatio: window.devicePixelRatio || 1,
       attribution: ATTR,
-      paintRules: [{ dataLayer: dataLayer, symbolizer: symbolizer }],
+      paintRules: [{ dataLayer: dataLayer, symbolizer: symbolizer, minzoom: minzoom }],
     });
   }
 
   return {
     roadsByCategory: () => layer("RdCL", new CategorySymbolizer()),
     roadsByBearing:  () => Bearing.attachAttribution(layer("RdCL", new SegmentBearingSymbolizer())),
-    buildingsByBearing: () => Bearing.attachAttribution(layer("BldA", new FootprintBearingSymbolizer())),
+    buildingsByBearing: () => Bearing.attachAttribution(layer("BldA", new FootprintBearingSymbolizer(), 17)),
     CATEGORY,
   };
 })();
@@ -97,7 +97,7 @@ const MapLegend = L.Control.extend({
     this._div = L.DomUtil.create("div", "map-legend");
     L.DomEvent.disableClickPropagation(this._div);
     this._entries = new Map();
-    map.on("overlayadd overlayremove", () => this._render());
+    map.on("overlayadd overlayremove zoomend", () => this._render());
     this._map = map;
     this._render();
     return this._div;
@@ -132,6 +132,12 @@ const MapLegend = L.Control.extend({
           row.append(sw, document.createTextNode(name));
           sec.appendChild(row);
         }
+      }
+      if (meta.kind === "bearing" && meta.zoomFloor && this._map.getZoom() < meta.zoomFloor) {
+        const w = document.createElement("p");
+        w.className = "legend-warn";
+        w.textContent = `ズーム${meta.zoomFloor}以上で表示（総描による欠落防止）`;
+        sec.appendChild(w);
       }
       this._div.appendChild(sec);
     }
