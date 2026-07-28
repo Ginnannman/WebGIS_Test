@@ -41,7 +41,7 @@ const GsiVector = (function () {
   // ---- 道路中心線：方位塗り分け（線分単位） ------------------------------
   class SegmentBearingSymbolizer {
     draw(context, geom, z, feature) {
-      context.lineWidth = 1.4;
+      context.lineWidth = 2.0;
       context.lineCap = "round";
       for (const ring of geom) {
         for (let i = 1; i < ring.length; i++) {
