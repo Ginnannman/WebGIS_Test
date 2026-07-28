@@ -272,15 +272,14 @@ const fetchWikidata = debounce(function () {
   if (inflight) inflight.abort();
   inflight = new AbortController();
 
-  fetch("https://query.wikidata.org/sparql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/sparql-query",
-      "Accept": "application/sparql-results+json",
-    },
-    body: sparql,
-    signal: inflight.signal,
-  })
+  const endpoint = "https://query.wikidata.org/sparql?query="
++    + encodeURIComponent(sparql);
++
++  fetch(endpoint, {
++    method: "GET",
++    headers: { "Accept": "application/sparql-results+json" },
++    signal: inflight.signal,
++  })
     .then((r) => {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
