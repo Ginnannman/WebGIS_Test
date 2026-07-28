@@ -84,3 +84,25 @@ html, body, #map {height: 100%; width: 100%;}
   margin: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
+
+.map-legend {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: none;
+}
+.map-legend section + section {
+  margin-top: 8px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 8px;
+}
+.map-legend h4 { margin: 0 0 4px; font-size: 11px; }
+.map-legend p  { margin: 2px 0 0; color: #666; }
+.legend-row { display: flex; align-items: center; gap: 6px; }
+.legend-swatch {
+  width: 16px; height: 4px; border-radius: 2px; flex: none;
+}
