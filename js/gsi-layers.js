@@ -6,6 +6,9 @@ const GsiVector = (function () {
   const MAX_DATA_ZOOM = 16;
   const ATTR = "<a href='https://github.com/gsi-cyberjapan/optimal_bvmap' " +
                "target='_blank' rel='noopener'>国土地理院最適化ベクトルタイル</a>";
+   const TILE_SPAN = 256;                 // levelDiff: 0 のとき
+  const GRID = 4;
+  const CELL = TILE_SPAN / GRID;
 
   // vt_rdctg の全値（style/std.json より）
   const CATEGORY = {
