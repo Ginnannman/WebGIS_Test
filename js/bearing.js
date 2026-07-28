@@ -40,12 +40,11 @@ const Bearing = (function () {
     return ((deg % 90) + 90) % 90;
   }
 
-
-  const TILE_SPAN = 512;
   const EDGE_EPS = 0.01;
- function isClipEdge(a, b) {
-    if (a.x === b.x && (a.x <= EDGE_EPS || a.x >= TILE_SPAN - EDGE_EPS)) return true;
-    if (a.y === b.y && (a.y <= EDGE_EPS || a.y >= TILE_SPAN - EDGE_EPS)) return true;
+
+ function isClipEdge(a, b, span) {
+    if (a.x === b.x && (a.x <= EDGE_EPS || a.x >= span - EDGE_EPS)) return true;
+    if (a.y === b.y && (a.y <= EDGE_EPS || a.y >= span - EDGE_EPS)) return true;
     return false;
   }
  
