@@ -73,6 +73,7 @@ const GsiVector = (function () {
     return protomapsL.leafletLayer({
       url: URL,
       maxDataZoom: MAX_DATA_ZOOM,
+      levelDiff: 0,
       devicePixelRatio: window.devicePixelRatio || 1,
       attribution: ATTR,
       paintRules: [{ dataLayer: dataLayer, symbolizer: symbolizer, minzoom: minzoom }],
