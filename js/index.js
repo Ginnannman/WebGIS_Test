@@ -65,25 +65,9 @@ const blankbase = L.layerGroup([]);
 // =====================================================================
 const meshLayer = MeshGrid.createLayer({ order: 2 });
 
-let meshLoaded = false;
-meshLayer.on("add", async () => {
-  if (meshLoaded) return;
-  meshLoaded = true;
-  try {
-    const res = await fetch("./data/hyoujun_mesh.geojson");
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    meshLayer.addData(await res.json());
-  } catch (err) {
-    meshLoaded = false;
-    console.error("メッシュデータの読み込みに失敗しました:", err);
-  }
-});
-
 // =====================================================================
 // MS AI Road Detections
 // =====================================================================
-// 方位を巡回的な色に対応させる。周期が 90 度なのは、
-// 直交する街路を同一の格子方位として扱うため。
 
 class BearingLineSymbolizer {
   draw(context, geom, z, feature) {
@@ -347,37 +331,86 @@ const overlays = {
 L.control.layers(baseMaps, overlays, { collapsed: false, position: "topleft" }).addTo(map);
 gsi.addTo(map);
 
+// =====================================================================
+// 凡例
+// =====================================================================
 const MapLegend = L.Control.extend({
-   options: { position: "bottomright" },
-   initialize(options) {
-     L.Util.setOptions(this, options);
-     this._entries = new Map(); 
+  options: { position: "bottomright" },
+
+  initialize(options) {
+    L.Util.setOptions(this, options);
+    this._entries = new Map();          // addTo より前に register できるようにする
+    this._boundRender = () => this._render();
   },
-     
-new MapLegend()
-.register(gsiRoadCategory, "category", "道路種別")
-.register(gsiRoadBearing,  "bearing",  "道路方位")
-.register(gsiBuildingAxis, "bearing",  "建物長軸方位", 17)
-.register(msRoadBearing,   "bearing",  "MS道路 方位")
-.addTo(map);
 
- onAdd(map) {
-     this._div = L.DomUtil.create("div", "map-legend");
-     L.DomEvent.disableClickPropagation(this._div);
-   map.on("overlayadd overlayremove zoomend", () => this._render());
-     this._map = map;
-     this._render();
-     return this._div;
-   },
+  onAdd(map) {
+    this._div = L.DomUtil.create("div", "map-legend");
+    L.DomEvent.disableClickPropagation(this._div);
+    this._map = map;
+    map.on("overlayadd overlayremove zoomend", this._boundRender);
+    this._render();
+    return this._div;
+  },
 
-register(layer, kind, title, zoomFloor) {
+  onRemove(map) {
+    // 第2引数を渡さないと同名イベントの他の購読者まで外れる
+    map.off("overlayadd overlayremove zoomend", this._boundRender);
+  },
+
+  register(layer, kind, title, zoomFloor) {
     this._entries.set(layer, { kind, title, zoomFloor });
-     return this;
-   },
- 
-   _render() {
+    return this;
+  },
+
+  _render() {
     if (!this._map || !this._div) return;
-     this._div.replaceChildren();
+    this._div.replaceChildren();
+
+    for (const [layer, meta] of this._entries) {
+      if (!this._map.hasLayer(layer)) continue;
+
+      const sec = document.createElement("section");
+      const h = document.createElement("h4");
+      h.textContent = meta.title;
+      sec.appendChild(h);
+
+      if (meta.kind === "bearing") {
+        sec.appendChild(Bearing.wheel(74));
+        const p = document.createElement("p");
+        p.textContent = "方位（90度周期）";
+        sec.appendChild(p);
+      } else if (meta.kind === "category") {
+        for (const [name, c] of Object.entries(GsiVector.CATEGORY)) {
+          const row = document.createElement("div");
+          row.className = "legend-row";
+          const sw = document.createElement("span");
+          sw.className = "legend-swatch";
+          sw.style.background = c.color;
+          row.append(sw, document.createTextNode(name));
+          sec.appendChild(row);
+        }
+      }
+
+      if (meta.zoomFloor && this._map.getZoom() < meta.zoomFloor) {
+        const w = document.createElement("p");
+        w.className = "legend-warn";
+        w.textContent = `ズーム${meta.zoomFloor}未満は集計表示`;
+        sec.appendChild(w);
+      }
+
+      this._div.appendChild(sec);
+    }
+
+    this._div.style.display = this._div.childElementCount ? "block" : "none";
+  },
+});
+
+new MapLegend()
+  .register(gsiRoadCategory, "category", "道路種別")
+  .register(gsiRoadBearing,  "bearing",  "道路方位")
+  .register(gsiBuildingAxis, "bearing",  "建物長軸方位", 17)
+  .register(msRoadBearing,   "bearing",  "MS道路 方位")
+  .addTo(map);
 
 L.control.mapCenterCoord({
   position: "bottomleft", onMove: true, latlngFormat: "DMS", latlngDesignators: true,
