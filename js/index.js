@@ -350,7 +350,7 @@ gsi.addTo(map);
 new MapLegend()
 .register(gsiRoadCategory, "category", "道路種別")
 .register(gsiRoadBearing,  "bearing",  "道路方位")
-.register(gsiBuildingAxis, "bearing",  "建物長軸方位")
+.register(gsiBuildingAxis, "bearing",  "建物長軸方位", 17)
 .register(msRoadBearing,   "bearing",  "MS道路 方位")
 .addTo(map);
 
