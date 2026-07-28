@@ -53,6 +53,10 @@ const mierunemono = L.tileLayer("https://tile.mierune.co.jp/mierune_mono/{z}/{x}
     "Map data &copy; <a href='https://openstreetmap.org' target='_blank' rel='noopener'>OpenStreetMap</a> contributors, under ODbL",
 });
 
+const gsiRoadCategory  = GsiVector.roadsByCategory();
+const gsiRoadBearing   = GsiVector.roadsByBearing();
+const gsiBuildingAxis  = GsiVector.buildingsByBearing();
+
 // 空のタイル URL はページ自身を取得しにいくため、空レイヤで代替する
 const blankbase = L.layerGroup([]);
 
@@ -80,21 +84,11 @@ meshLayer.on("add", async () => {
 // =====================================================================
 // 方位を巡回的な色に対応させる。周期が 90 度なのは、
 // 直交する街路を同一の格子方位として扱うため。
-const BEARING_COLORS = [
-  "#ff0000", "#ff7f00", "#ffff00", "#7fff00",
-  "#00ff00", "#00ff7f", "#00ffff", "#007fff",
-  "#0000ff", "#7f00ff", "#ff00ff", "#ff007f",
-];
-
-function bearingColor(deg) {
-  if (!Number.isFinite(deg)) return "#000000";
-  return BEARING_COLORS[Math.floor((deg + 3.75) / 7.5) % BEARING_COLORS.length];
-}
 
 class BearingLineSymbolizer {
   draw(context, geom, z, feature) {
     context.beginPath();
-    context.strokeStyle = bearingColor(feature.props["hougaku"]);
+    context.strokeStyle = Bearing.color(feature.props["hougaku"]);
     for (const poly of geom) {
       poly.forEach((pt, i) => (i === 0 ? context.moveTo(pt.x, pt.y) : context.lineTo(pt.x, pt.y)));
     }
@@ -345,10 +339,20 @@ const overlays = {
   "標準地域メッシュ": meshLayer,
   "MS道路データ（単色）": msRoadPlain,
   "MS道路データ（方位別）": msRoadBearing,
+  "地理院 道路中心線（種別）": gsiRoadCategory,
+  "地理院 道路中心線（方位）": gsiRoadBearing,
+  "地理院 建築物（長軸方位）": gsiBuildingAxis,
 };
 
 L.control.layers(baseMaps, overlays, { collapsed: false, position: "topleft" }).addTo(map);
 gsi.addTo(map);
+
+new MapLegend()
+.register(gsiRoadCategory, "category", "道路種別")
+.register(gsiRoadBearing,  "bearing",  "道路方位")
+.register(gsiBuildingAxis, "bearing",  "建物長軸方位")
+.register(msRoadBearing,   "bearing",  "MS道路 方位")
+.addTo(map);
 
 L.control.mapCenterCoord({
   position: "bottomleft", onMove: true, latlngFormat: "DMS", latlngDesignators: true,
